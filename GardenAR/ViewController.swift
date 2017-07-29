@@ -37,8 +37,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var overlay: SKScene!
     var planes = [OverlayPlane]()
     // [nodeName: (["x": Int], ["color": "selectedColor"])]
-    var eachBoxSize: [Int: ([String: CGFloat], [String: String])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": "red"])]
-    var boxColor = String()
+    var eachBoxSize: [Int: ([String: CGFloat], [String: UIColor])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": UIColor.brown])]
+    //var boxColor = String()
     var openedPanel = false
     //status
     var chosenStatus = NodeType.redBox
@@ -69,9 +69,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var boxWidth = CGFloat(0.2)
     var boxHight = CGFloat(0.2)
     var boxLength = CGFloat(0.2)
+    var boxColor = UIColor()
     var currentNode = SCNNode()
+    var currentMovingNode = SCNNode()
+    var lastMovingNode = SCNNode()
     var currentNodeGeo = SCNGeometry()
-    var selected = false
+    var selected = Bool()
     var scaleAble = Bool()
     //var inProgress = false
     override func viewDidLoad() {
@@ -88,12 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         let scene = SCNScene()
         // Set the scene to the view
         sceneView.scene = scene
-        //addlight
-        let light = SCNNode()
-        light.light = SCNLight()
-        light.light?.type = SCNLight.LightType.directional
-        light.eulerAngles = SCNVector3Make(-45, 45, 0)
-        sceneView.scene.rootNode.addChildNode(light)
+        sceneView.autoenablesDefaultLighting = true
         overlay = SKScene(size:CGSize(width:375,height:750))
         overlay.scaleMode = .aspectFill
         overlay.zPosition = +10
@@ -126,19 +124,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBAction func scaleUp(_ sender: Any) {
         print("scaleable up is \(scaleAble)")
         if scaleAble{
+            print("can scale u = \(scaleAble)")
             // check eachBoxSize is not nil
             guard eachBoxSize != nil else {
                 return
             }
             // check eachBoxSize for currentBoxNumber is not nil
-            
             guard eachBoxSize[currentBoxNumber] != nil else {
                 print("there is no values in currentBoxNumber")
                 return
             }
-            //var eachBoxSize: [Int: ([String: CGFloat], [String: String])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": "red"])]
-
-           
             // check values in eachBoxSize for currentBoxNumber are not nils
             guard eachBoxSize[currentBoxNumber]! != nil else{
                 print("error1")
@@ -148,7 +143,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 print("error2")
                 return
             }
-            guard eachBoxSize[currentBoxNumber]?.0["x"] != nil && eachBoxSize[currentBoxNumber]?.0["y"] != nil && eachBoxSize[currentBoxNumber]?.0["z"] != nil else{
+            guard eachBoxSize[currentBoxNumber]!.0["x"] != nil && eachBoxSize[currentBoxNumber]?.0["y"] != nil && eachBoxSize[currentBoxNumber]?.0["z"] != nil else{
                 print("error3")
                 return
             }
@@ -156,42 +151,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             boxLength = eachBoxSize[currentBoxNumber]!.0["z"]! + 0.01
             boxHight = eachBoxSize[currentBoxNumber]!.0["y"]! + 0.01
             boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]! + 0.01
- 
+            boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height:  boxHight, length: boxLength, chamferRadius: 0)
-            
-            
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
-
+            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
             print("eachboxSize  after scale is \(eachBoxSize)")
             currentNode.geometry = geo
-//            let material = SCNMaterial()
-//            if chosenStatus == .redBox{
-//                material.diffuse.contents = UIColor.red
-//            }else if chosenStatus == .blueBox{
-//                material.diffuse.contents = UIColor(red:0.29, green:0.56, blue:0.89, alpha:1.0)
-//            }else if chosenStatus == .orangeBox{
-//                material.diffuse.contents = UIColor.orange
-//            }else if chosenStatus == .yellowBox{
-//                material.diffuse.contents = UIColor.yellow
-//            }else if chosenStatus == .greenBox{
-//                material.diffuse.contents = UIColor.green
-//            }else if chosenStatus == .PurpleBox{
-//                material.diffuse.contents = UIColor.purple
-//            }else if chosenStatus == .pinkBox{
-//                material.diffuse.contents = UIColor(red:0.90, green:0.42, blue:1.00, alpha:1.0)
-//            }else if chosenStatus == .blackBox{
-//                material.diffuse.contents = UIColor.black
-//            }else if chosenStatus == .greyBox{
-//                material.diffuse.contents = UIColor.gray
-//            }else if chosenStatus == .brownBox{
-//                material.diffuse.contents = UIColor.brown
-//            }else if chosenStatus == .whiteBox{
-//                material.diffuse.contents = UIColor.white
-//            }
-//            geo.materials = [material]
+            let material = SCNMaterial()
+            material.diffuse.contents = boxColor
+            geo.materials = [material]
             print(boxGeometry.width)
             print(boxGeometry.height)
             print(boxGeometry.length)
@@ -202,6 +173,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBAction func scaleDown(_ sender: Any) {
         print("scaleable down is \(scaleAble)")
         if scaleAble{
+            print("can scale down = \(scaleAble)")
             // check eachBoxSize is not nil
             guard eachBoxSize != nil else {
                 return
@@ -211,45 +183,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 print("there is no values in currentBoxNumber")
                 return
             }
-            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": "red"]), forKey: boxNodeNumber)
             // check values in eachBoxSize for currentBoxNumber are not nils
-            guard eachBoxSize(["x"])
-            guard eachBoxSize([currentBoxNumber]["y"] != nil && eachBoxSize[currentBoxNumber](["x"] != nil && eachBoxSize[currentBoxNumber](["z"] != nil else {
-                print("there is no values in x, y or z or currentBoxNumber")
+            guard eachBoxSize[currentBoxNumber]! != nil else{
+                print("error1")
                 return
             }
-            boxLength = eachBoxSize[currentBoxNumber]!["z"],! - 0.01
-            boxHight = eachBoxSize[currentBoxNumber]!["y"]! - 0.01
-            boxWidth = eachBoxSize[currentBoxNumber]!["x"]! - 0.01
+            guard eachBoxSize[currentBoxNumber]?.0 != nil else{
+                print("error2")
+                return
+            }
+            guard eachBoxSize[currentBoxNumber]!.0["x"] != nil && eachBoxSize[currentBoxNumber]?.0["y"] != nil && eachBoxSize[currentBoxNumber]?.0["z"] != nil else{
+                print("error3")
+                return
+            }
+            boxLength = eachBoxSize[currentBoxNumber]!.0["z"]! - 0.01
+            boxHight = eachBoxSize[currentBoxNumber]!.0["y"]! - 0.01
+            boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]! - 0.01
+            boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
             //eachBoxSize[currentBoxNumber]
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
-            eachBoxSize.updateValue((["x": boxWidth, "y": boxHight, "z": boxLength], "\(chosenStatus)"), forKey: currentBoxNumber)
+            eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
+            eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
+            eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
+            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
             currentNode.geometry = geo
             let material = SCNMaterial()
-                if chosenStatus == .redBox{
-                    material.diffuse.contents = UIColor.red
-                }else if chosenStatus == .blueBox{
-                    material.diffuse.contents = UIColor(red:0.29, green:0.56, blue:0.89, alpha:1.0)
-                }else if chosenStatus == .orangeBox{
-                    material.diffuse.contents = UIColor.orange
-                }else if chosenStatus == .yellowBox{
-                    material.diffuse.contents = UIColor.yellow
-                }else if chosenStatus == .greenBox{
-                    material.diffuse.contents = UIColor.green
-                }else if chosenStatus == .PurpleBox{
-                    material.diffuse.contents = UIColor.purple
-                }else if chosenStatus == .pinkBox{
-                    material.diffuse.contents = UIColor(red:0.90, green:0.42, blue:1.00, alpha:1.0)
-                }else if chosenStatus == .blackBox{
-                    material.diffuse.contents = UIColor.black
-                }else if chosenStatus == .greyBox{
-                    material.diffuse.contents = UIColor.gray
-                }else if chosenStatus == .brownBox{
-                   material.diffuse.contents = UIColor.brown
-                }else if chosenStatus == .whiteBox{
-                    material.diffuse.contents = UIColor.white
-                }
+            material.diffuse.contents = boxColor
             geo.materials = [material]
             print(boxGeometry.width)
             print(boxGeometry.height)
@@ -258,9 +218,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         }
     }
     @IBAction func deleteAction(_ sender: Any) {
-//        if scaleAble{
-//           currentNode.removeFromParentNode()
-//        }
+        print("delete")
+        if scaleAble{
+            print("in delete: nodes name is\(currentNode.name)")
+           currentNode.removeFromParentNode()
+        }
     }
     
     @objc func moving(recognizer: UIPanGestureRecognizer){
@@ -308,7 +270,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 guard let hitResult = hitTestResult.first else {
                     return
                 }
-                print("status is \(chosenStatus)")
+                // get the hittest of one cube site
+                
+                
+                //pick the chosen color, add cube to scene in that color
                 if chosenStatus == .redBox{
                 addBox(hitResult: hitResult, color: UIColor.red)
                 }else if chosenStatus == .blueBox{
@@ -333,7 +298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                     addBox(hitResult: hitResult, color: UIColor.white)
                 }
             }else if hitTestResult.isEmpty{
-                print("touchlocation is not empty")
+                print("touchlocation is empty")
             }
     }
     
@@ -352,8 +317,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         }
         
     }
-    
+    var addingNewCube = Bool()
     private func addBox(hitResult :ARHitTestResult, color: UIColor) {
+        //disactivate selected and scaleable
+        scaleAble = false
+        selected = false
+        isMoving = false
+        addingNewCube = true
+        currentMovingNode.opacity = 1
+        movingStatus = .currentMovingNotChosen
+        //
+        if addingNewCube{
         boxNodeNumber += 1
         boxNodeNumbers.append(boxNodeNumber)
         boxWidth = 0.2
@@ -361,21 +335,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         boxLength = 0.2
         boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
         let material = SCNMaterial()
+        let top = SCNMaterial()
+        let bottom = SCNMaterial()
+        let left = SCNMaterial()
+        let right = SCNMaterial()
+        let front = SCNMaterial()
+        let back = SCNMaterial()
         material.diffuse.contents = color
         boxGeometry.chamferRadius = 0
+        boxGeometry.materials = [front, right, back, left, top, bottom]
         boxGeometry.materials = [material]
         boxNode = SCNNode(geometry: boxGeometry)
         boxNode.name = "boxNode\(boxNodeNumber)"
-        
-        //var eachBoxSize: [Int: ([String: CGFloat], [String: String])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": "red"])]
-        eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": "red"]), forKey: boxNodeNumber)
-        //eachBoxSize.updateValue(["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.length], forKey: ["color": "\(chosenStatus)"]);)
+        eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
-        print(boxNode.name)
-        print("This is all created boxes with sizes \(eachBoxSize)")
+        }
     }
-   
+    
+    
     
     
   
@@ -397,28 +375,101 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         //item can be placed
         chooseBlock = boolien
     }
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+     
+            if movingStatus == SelectionType.currentMovingChosen{
+                currentMovingNode.opacity = 0.5
+            }else if movingStatus == SelectionType.currentMovingNotChosen{
+                currentMovingNode.opacity = 1
+                currentMovingNode.removeAllActions()
+            }
+            
+        
+        
+    }
+    var isMoving = Bool()
+    enum SelectionType{
+        case currentMovingChosen
+        case currentMovingNotChosen
+    }
+    var movingStatus = SelectionType.currentMovingNotChosen
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if let touch = touches.first{
             let location = touch.location(in: sceneView as ARSCNView)
             let hitList = sceneView.hitTest(location, options: nil)
             if let hitObject = hitList.first{
-                var node = hitObject.node
+                //choosing sidenode
+                if movingStatus == SelectionType.currentMovingChosen{
+                if isMoving{
+                if selected{
+                    for boxNodeNumber in boxNodeNumbers{
+                    let sideNode = hitObject.node
+                        if sideNode.position.x == lastMovingNode.position.x{
+                            movingStatus = .currentMovingNotChosen
+                        }
+                        if sideNode.name == "boxNode\(boxNodeNumber)"{
+                    print("isMoving = \(isMoving)")
+                    print("selected = \(selected)")
+                //Find the material for the clicked element
+                    print("sideNode.position is \(sideNode.position)")
+                    print("sideNode.name is \(sideNode.name)")
+                let material = sideNode.geometry?.materials[hitObject.geometryIndex]
+                let moveToTappedNode = SCNAction.move(to: SCNVector3(sideNode.position.x - 0.2, sideNode.position.y, sideNode.position.z), duration: 2)
+                currentMovingNode.runAction(moveToTappedNode)
+                lastMovingNode = currentMovingNode
+                //Do something with that material, for example:
+                let highlight = CABasicAnimation(keyPath: "diffuse.contents")
+                highlight.toValue = UIColor.red
+                highlight.duration = 1.0
+                highlight.autoreverses = true
+                highlight.isRemovedOnCompletion = true
+                material?.addAnimation(highlight, forKey: nil)
+                selected = false
+                isMoving = true
+                    print("execute")
+                        }
+                }
+                }
+                }
+                }
+                //choosing currentmovingnode
                 for boxNodeNumber in boxNodeNumbers{
+                    let node = hitObject.node
                     if node.name == "boxNode\(boxNodeNumber)"{
-                        print("touched on \(boxNodeNumber)")
-                        //allow to scale
-                        scaleAble = true
-                        currentBoxNumber = boxNodeNumber
-                        currentNode = node
-                        print("is scaleable\(scaleAble)")
+                        print("helloo")
+                        //if selected cube is moving, than select a new destination, allow the current cube to move to all destinations that are tapped
+                        if isMoving{
+                            selected = true
+                            tapGestureRecognizer.isEnabled = false
+                        }
+                        //if no cube is moving and if nothing is selected to be moved, than tapped cube is the currentCubeNode to be moved
+                        if !isMoving{
+                        if selected == false {
+                            //choose this selected cube to be the mover
+                            if !isMoving{
+                              
+                            currentMovingNode = node
+                            movingStatus = .currentMovingChosen
+                                print("this Cube chosen to be current cube\(currentNode.name)")
+                            }
+                            //something is selected, and allows to move..
+                            selected = true
+                            isMoving = true
+                        }
+                            //this has nothing to do with moving cubes
+                            currentBoxNumber = boxNodeNumber
+                            currentNode = node
+                            scaleAble = true
+                        
                         //doesnt allow to add box on existing box position
                         tapGestureRecognizer.isEnabled = false
-                        print("tapGesture = \(tapGestureRecognizer.isEnabled)")
-                    }else{
-                        print("touch on screen tapGesture = \(tapGestureRecognizer.isEnabled) ")
+                        }
                     }
                 }
+                
+                
             }
         }
         guard let touch = touches.first else {
@@ -508,7 +559,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        
         if !(anchor is ARPlaneAnchor) {
             return
         }
@@ -518,7 +568,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        
+
         let plane = self.planes.filter { plane in
             return plane.anchor.identifier == anchor.identifier
             }.first

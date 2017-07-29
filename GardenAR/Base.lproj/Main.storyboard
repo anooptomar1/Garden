@@ -72,7 +72,6 @@
                                 </constraints>
                                 <state key="normal" title="Button" image="trashIcon"/>
                                 <connections>
-                                    <action selector="delete:" destination="BV1-FR-VrT" eventType="touchUpInside" id="OHl-1X-Ec4"/>
                                     <action selector="deleteAction:" destination="BV1-FR-VrT" eventType="touchUpInside" id="fkD-Gf-OVW"/>
                                 </connections>
                             </button>
