@@ -350,6 +350,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
+            print("added")
         }
     }
     
@@ -381,9 +382,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 currentMovingNode.opacity = 0.5
             }else if movingStatus == SelectionType.currentMovingNotChosen{
                 currentMovingNode.opacity = 1
-                currentMovingNode.removeAllActions()
+                //currentMovingNode.removeAllActions()
             }
-            
+      
         
         
     }
@@ -391,81 +392,174 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     enum SelectionType{
         case currentMovingChosen
         case currentMovingNotChosen
+        case chooseNewMovingNode
     }
     var movingStatus = SelectionType.currentMovingNotChosen
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        print("***ismoving\(isMoving)")
+        print("****is selected\(selected)")
+        print(movingStatus)
         if let touch = touches.first{
             let location = touch.location(in: sceneView as ARSCNView)
             let hitList = sceneView.hitTest(location, options: nil)
             if let hitObject = hitList.first{
                 //choosing sidenode
                 if movingStatus == SelectionType.currentMovingChosen{
-                if isMoving{
-                if selected{
-                    for boxNodeNumber in boxNodeNumbers{
-                    let sideNode = hitObject.node
-                        if sideNode.position.x == lastMovingNode.position.x{
-                            movingStatus = .currentMovingNotChosen
+                    if isMoving{
+                        if selected{
+                            for boxNodeNumber in boxNodeNumbers{
+                                let destinationNode = hitObject.node
+                                /////***********
+                                //A
+                                /////******
+                                if destinationNode.position.x == currentMovingNode.position.x{
+                                    movingStatus = .currentMovingNotChosen
+//                                    isMoving = false
+//                                    selected = false
+                                    print("the new destination was on the current node")
+                                    print("moving status is \(movingStatus)")
+                                    print("isMoving than is \(isMoving)")
+                                    print("selected than is \(selected)")
+                                    //currentMovingNode.removeFromParentNode()
+                                }
+                                /////***********
+                                //3
+                                /////******
+                                if movingStatus == .currentMovingChosen{
+                                if destinationNode.name == "boxNode\(boxNodeNumber)"{
+                                    print("isMoving = \(isMoving)")
+                                    print("selected = \(selected)")
+                                    //Find the material for the clicked element
+                                    print("destinationNode.position is \(destinationNode.position)")
+                                    print("destinationNode is \(destinationNode.name)")
+                                    let material = destinationNode.geometry?.materials[hitObject.geometryIndex]
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x - 0.2, destinationNode.position.y, destinationNode.position.z), duration: 2)
+                                    if movingStatus == .currentMovingChosen{
+                                    currentMovingNode.runAction(moveToTappedNode)
+                                    movingStatus = .currentMovingNotChosen
+                                    currentMovingNode.opacity = 1
+                                    }else{
+                                        print("no cube is moving")
+                                        print("status after... is\(movingStatus)")
+                                    }
+                                    //lastMovingNode = currentMovingNode
+                                    //Do something with that material, for example:
+                                    let highlight = CABasicAnimation(keyPath: "diffuse.contents")
+                                    highlight.toValue = UIColor.red
+                                    highlight.duration = 1.0
+                                    highlight.autoreverses = true
+                                    highlight.isRemovedOnCompletion = true
+                                    material?.addAnimation(highlight, forKey: nil)
+                                    selected = false
+                                    isMoving = true
+                                    print("execute")
+                                    }
+                                }else{
+                                    print("the currrent cube was removed.. end of code")
+                                }
+                            }
                         }
-                        if sideNode.name == "boxNode\(boxNodeNumber)"{
-                    print("isMoving = \(isMoving)")
-                    print("selected = \(selected)")
-                //Find the material for the clicked element
-                    print("sideNode.position is \(sideNode.position)")
-                    print("sideNode.name is \(sideNode.name)")
-                let material = sideNode.geometry?.materials[hitObject.geometryIndex]
-                let moveToTappedNode = SCNAction.move(to: SCNVector3(sideNode.position.x - 0.2, sideNode.position.y, sideNode.position.z), duration: 2)
-                currentMovingNode.runAction(moveToTappedNode)
-                lastMovingNode = currentMovingNode
-                //Do something with that material, for example:
-                let highlight = CABasicAnimation(keyPath: "diffuse.contents")
-                highlight.toValue = UIColor.red
-                highlight.duration = 1.0
-                highlight.autoreverses = true
-                highlight.isRemovedOnCompletion = true
-                material?.addAnimation(highlight, forKey: nil)
-                selected = false
-                isMoving = true
-                    print("execute")
+                    }
+                }
+                
+                for boxNodeNumber in boxNodeNumbers{
+                    if movingStatus == .chooseNewMovingNode{
+                        let node = hitObject.node
+                        if node.name == "boxNode\(boxNodeNumber)"{
+                        currentMovingNode = node
+                            currentMovingNode.opacity = 0.5
+                            isMoving = true
+                            selected = true
+                            movingStatus = .currentMovingChosen
+                        print("should have changed  the currentNode")
                         }
-                }
-                }
-                }
+                    }
+                    
+                    
                 }
                 //choosing currentmovingnode
                 for boxNodeNumber in boxNodeNumbers{
                     let node = hitObject.node
                     if node.name == "boxNode\(boxNodeNumber)"{
+                        
                         print("helloo")
+                        if movingStatus == .currentMovingNotChosen{
+                            //change status to
+                            movingStatus = .chooseNewMovingNode
+                        }
+                        tapGestureRecognizer.isEnabled = false
                         //if selected cube is moving, than select a new destination, allow the current cube to move to all destinations that are tapped
+                        //something is selected, and allows to move..
+                        /////***********
+                        //4
+                        /////******
+                        /////***********
+                        //B
+                        /////******
+                        if  movingStatus == .currentMovingChosen{
                         if isMoving{
                             selected = true
                             tapGestureRecognizer.isEnabled = false
-                        }
-                        //if no cube is moving and if nothing is selected to be moved, than tapped cube is the currentCubeNode to be moved
-                        if !isMoving{
-                        if selected == false {
-                            //choose this selected cube to be the mover
-                            if !isMoving{
-                              
-                            currentMovingNode = node
-                            movingStatus = .currentMovingChosen
-                                print("this Cube chosen to be current cube\(currentNode.name)")
+                            //movingStatus = SelectionType.currentMovingChosen
+                            if movingStatus == SelectionType.currentMovingNotChosen{
+                                print(" changing selected and moving to false to start over")
+                                selected = false
+                                isMoving = false
+                                tapGestureRecognizer.isEnabled = false
                             }
-                            //something is selected, and allows to move..
-                            selected = true
-                            isMoving = true
+                            print("ready to selected a new cube")
+                            print("status is \(movingStatus)")
+                            print("is selected is \(selected)")
+                            print("isMoving is \(isMoving)")
                         }
+                            tapGestureRecognizer.isEnabled = false
+                        }
+//*********************************************************************************************************************************************************************
+                        //if no cube is moving and if nothing is selected to be moved, than tapped cube is the currentCubeNode to be moved
+                        if movingStatus == .currentMovingNotChosen{
+                        if isMoving && selected{
+                            
+//                            lastMovingNode = currentMovingNode
+                            
+                            print("am here to change moving and selected to false")
+                            print("ismoving = \(isMoving)")
+                            print("selected is \(selected)")
+                        }
+                        }
+                        if !isMoving{
+                            if selected == false {
+                                //choose this selected cube to be the mover
+                                if !isMoving{
+                                    print("starting over")
+                                    currentMovingNode = node
+                                    movingStatus = .currentMovingChosen
+                                    /////***********
+                                    //1
+                                    /////******
+                                    print("this Cube chosen to be current cube\(currentMovingNode.name)")
+                                    tapGestureRecognizer.isEnabled = false
+                                }
+                                //something is selected, and allows to move..
+                                /////***********
+                                //2
+                                /////******
+                                selected = true
+                                isMoving = true
+                                tapGestureRecognizer.isEnabled = false
+                                print(movingStatus)
+                                print("isMoving is\(isMoving)")
+                                print("is selected \(selected)")
+                            }
+                        }
+                        
+                        //-----------------------------------------------
                             //this has nothing to do with moving cubes
                             currentBoxNumber = boxNodeNumber
                             currentNode = node
                             scaleAble = true
-                        
-                        //doesnt allow to add box on existing box position
-                        tapGestureRecognizer.isEnabled = false
-                        }
+                            //doesnt allow to add box on existing box position
+                            tapGestureRecognizer.isEnabled = false
                     }
                 }
                 
@@ -537,13 +631,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
-        print("touch in ended on screen tapGesture = \(tapGestureRecognizer.isEnabled) ")
+        
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
-        print("touch in cancelled on screen tapGesture = \(tapGestureRecognizer.isEnabled) ")
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
