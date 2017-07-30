@@ -47,6 +47,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var boxNodeNumber = 0
     var boxNodeNumbers = [Int]()
     var currentBoxNumber = Int()
+    var destinationBoxNumber = Int()
     var plusScale = SKSpriteNode()
     var minusScale = SKSpriteNode()
     //icons
@@ -360,7 +361,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
-            print("added")
+        print("added node \(boxNode.name)")
             
         }
     }
@@ -388,260 +389,176 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         chooseBlock = boolien
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-     
-            if movingStatus == SelectionType.currentMovingChosen{
-                currentMovingNode.opacity = 0.5
-            }else if movingStatus == SelectionType.currentMovingNotChosen{
-                currentMovingNode.opacity = 1
-                //currentMovingNode.removeAllActions()
-            }
+//
+//            if movingStatus == SelectionType.currentMovingChosen{
+//                currentMovingNode.opacity = 0.5
+//            }else if movingStatus == SelectionType.currentMovingNotChosen{
+//                currentMovingNode.opacity = 1
+//                //currentMovingNode.removeAllActions()
+//            }
       
         
         
     }
+    func updateAllCordinates(){
+        eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
+        eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
+        eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
+        eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+        eachBoxSize[destinationBoxNumber]!.0.updateValue(boxWidthD, forKey: "x")
+        eachBoxSize[destinationBoxNumber]!.0.updateValue(boxHightD, forKey: "y")
+        eachBoxSize[destinationBoxNumber]!.0.updateValue(boxLengthD, forKey: "z")
+        eachBoxSize[destinationBoxNumber]!.1.updateValue(boxColorD, forKey: "color")
+    }
+    func importAllCoordinates(){
+        boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
+        boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
+        boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
+        boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+        boxLengthD = eachBoxSize[destinationBoxNumber]!.0["z"]!
+        boxHightD = eachBoxSize[destinationBoxNumber]!.0["y"]!
+        boxWidthD = eachBoxSize[destinationBoxNumber]!.0["x"]!
+        boxColorD = eachBoxSize[destinationBoxNumber]!.1["color"]!
+    }
+    func showHiglightOfDestinationFace(material: SCNMaterial){
+        let highlight = CABasicAnimation(keyPath: "diffuse.contents")
+        highlight.toValue = UIColor.white
+        highlight.duration = 1.0
+        highlight.autoreverses = true
+        highlight.isRemovedOnCompletion = true
+        material.addAnimation(highlight, forKey: nil)
+    }
+    
     var isMoving = Bool()
+    
     enum SelectionType{
         case currentMovingChosen
         case currentMovingNotChosen
         case chooseNewMovingNode
     }
+    
     var movingStatus = SelectionType.currentMovingNotChosen
     enum CubeFace: Int {
         case Front, Right, Back, Left, Top, Bottom
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("***ismoving\(isMoving)")
-        print("****is selected\(selected)")
-        print(movingStatus)
         if let touch = touches.first{
             let location = touch.location(in: sceneView as ARSCNView)
             let hitList = sceneView.hitTest(location, options: nil)
             if let hitObject = hitList.first{
-                //choosing sidenode
-                if movingStatus == SelectionType.currentMovingChosen{
-                    if isMoving{
-                        if selected{
-                            for boxNodeNumber in boxNodeNumbers{
-                                let destinationNode = hitObject.node
-                                /////***********
-                                //A
-                                /////******
-                                if destinationNode.position.x == currentMovingNode.position.x{
-                                    movingStatus = .currentMovingNotChosen
-//                                    isMoving = false
-//                                    selected = false
-                                    print("the new destination was on the current node")
-                                    print("moving status is \(movingStatus)")
-                                    print("isMoving than is \(isMoving)")
-                                    print("selected than is \(selected)")
-                                    tapGestureRecognizer.isEnabled = false
-                                    currentMovingNode.opacity = 1
-                                }
-                                /////***********
-                                //3
-                                /////******
-                                if movingStatus == .currentMovingChosen{
-                                if destinationNode.name == "boxNode\(boxNodeNumber)"{
-                                    print("isMoving = \(isMoving)")
-                                    print("selected = \(selected)")
-                                    //Find the material for the clicked element
-                                    print("destinationNode.position is \(destinationNode.position)")
-                                    print("destinationNode is \(destinationNode.name)")
-                                    let material = destinationNode.geometry?.materials[hitObject.geometryIndex]
-                                    print("hit face: \(CubeFace(rawValue: hitObject.geometryIndex))")
-                                    
-                                    print(destinationNode.scale.x)
-                                    print("geometryIndex\(hitObject.geometryIndex)")
-                                    if movingStatus == .currentMovingChosen{
-                                        
-                                        boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
-                                        boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
-                                        boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
-                                        boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
-                                        boxLengthD = eachBoxSize[boxNodeNumber]!.0["z"]!
-                                        boxHightD = eachBoxSize[boxNodeNumber]!.0["y"]!
-                                        boxWidthD = eachBoxSize[boxNodeNumber]!.0["x"]!
-                                        boxColorD = eachBoxSize[boxNodeNumber]!.1["color"]!
-                                        
-//                                        eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
-//                                        eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
-//                                        eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
-                                        
-                                        
-                                        if hitObject.geometryIndex == 0{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(boxLengthD)/2) +  (Float(boxLength)/2)), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxLengthD, forKey: "z")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("front")
-                                        }else if hitObject.geometryIndex == 1{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x + Float(boxWidthD)/2) + (Float(boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxWidthD, forKey: "x")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("right")
-                                        }else if hitObject.geometryIndex == 2{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z - Float(boxLengthD)/2) - (Float(boxLength)/2)), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxLengthD, forKey: "z")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("back")
-                                        }else if hitObject.geometryIndex == 3{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x - Float(boxWidthD)/2) - (Float(boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxWidthD, forKey: "x")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("left")
-                                        }else if hitObject.geometryIndex == 4{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y + Float(boxHightD)/2) + (Float(boxHight)/2), destinationNode.position.z), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxHightD, forKey: "y")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("top")
-                                        }else if hitObject.geometryIndex == 5{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(boxHightD)/2) - (Float(boxHight)/2), destinationNode.position.z), duration: 0.5)
-                                            eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
-                                            eachBoxSize[boxNodeNumber]!.0.updateValue(boxHightD, forKey: "y")
-                                            eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
-                                            eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-                                            currentMovingNode.runAction(moveToTappedNode)
-                                            print("bottom")
-                                        }
-                                    
-                                    movingStatus = .currentMovingNotChosen
-                                    currentMovingNode.opacity = 1
-                                    }else{
-                                        print("no cube is moving")
-                                        print("status after... is\(movingStatus)")
-                                    }
-                                    //lastMovingNode = currentMovingNode
-                                    //Do something with that material, for example:
-                                    let highlight = CABasicAnimation(keyPath: "diffuse.contents")
-                                    highlight.toValue = UIColor.white
-                                    highlight.duration = 1.0
-                                    highlight.autoreverses = true
-                                    highlight.isRemovedOnCompletion = true
-                                    material?.addAnimation(highlight, forKey: nil)
-                                    selected = false
-                                    isMoving = true
-                                    print("execute")
-                                    }
-                                }else{
-                                    print("the currrent cube was removed.. end of code")
-                                }
-                            }
-                        }
-                    }
-                }
                 
-                for boxNodeNumber in boxNodeNumbers{
-                    if movingStatus == .chooseNewMovingNode{
+                if movingStatus ==  .currentMovingNotChosen{
+                    for boxNodeNumber in boxNodeNumbers{
                         let node = hitObject.node
                         if node.name == "boxNode\(boxNodeNumber)"{
-                        currentMovingNode = node
+                            let group = DispatchGroup()
+                            group.enter()
+                            DispatchQueue.main.async {
+                                self.currentNode = node
+                                self.currentMovingNode = node
+                                self.currentBoxNumber = boxNodeNumber
+                                print("currentMovingNode name is\(self.currentMovingNode.name)")
+                                //
+                                self.scaleAble = true
+                                self.currentMovingNode.opacity = 0.5
+                                group.leave()
+                            }
+                            group.notify(queue: .main){
+                                self.movingStatus = .currentMovingChosen
+                            }
+                            tapGestureRecognizer.isEnabled = false
+                            print("tapped on a node")
+                        }else{
+                            print("didnt tap on a node")
+                        }
+                    }
+                }else if movingStatus == .currentMovingChosen{
+                  print("in currentMovingChosen but didnt choose any node, node wasnt selected")
+    //--------------------
+                    for boxNodeNumber in boxNodeNumbers{
+                        print("run")
+                        let destinationNode = hitObject.node
+                        if destinationNode.name == "boxNode\(boxNodeNumber)"{
+                            print("destinationNodes name is\(destinationNode.name)")
+                            print("run2")
+                        if destinationNode.position.x == currentMovingNode.position.x && destinationNode.position.y == currentMovingNode.position.y && destinationNode.position.z == currentMovingNode.position.z{
+                            movingStatus = .currentMovingNotChosen
+                            currentMovingNode.opacity = 1
+                            print("run.......")
+                        }else{
+                            print("run3")
+                            let group = DispatchGroup()
+                            group.enter()
+                            DispatchQueue.main.async {
+                                print("in async for ")
+                                self.destinationBoxNumber = boxNodeNumber
+                                //Find the material for the clicked element
+                                let material = destinationNode.geometry?.materials[hitObject.geometryIndex]
+                               self.importAllCoordinates()
+                                if hitObject.geometryIndex == 0{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(self.self.boxLengthD)/2) +  (Float(self.boxLength)/2)), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("front")
+                                }else if hitObject.geometryIndex == 1{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x + Float(self.boxWidthD)/2) + (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("right")
+                                }else if hitObject.geometryIndex == 2{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z - Float(self.boxLengthD)/2) - (Float(self.boxLength)/2)), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("back")
+                                }else if hitObject.geometryIndex == 3{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x - Float(self.boxWidthD)/2) - (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("left")
+                                }else if hitObject.geometryIndex == 4{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y + Float(self.boxHightD)/2) + (Float(self.boxHight)/2), destinationNode.position.z), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("top")
+                                }else if hitObject.geometryIndex == 5{
+                                    let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(self.boxHightD)/2) - (Float(self.boxHight)/2), destinationNode.position.z), duration: 0.5)
+                                    self.updateAllCordinates()
+                                    self.currentMovingNode.runAction(moveToTappedNode)
+                                    print("bottom")
+                                }
+                                self.currentMovingNode.opacity = 1
+                                self.showHiglightOfDestinationFace(material: material!)
+                                
+                                group.leave()
+                            }
+                            group.notify(queue: .main){
+                                self.movingStatus = .currentMovingNotChosen
+                                print("left status currentmoving chosen")
+                                }
+                            }
+                            tapGestureRecognizer.isEnabled = false
+                        }
+                    }
+   //--------------------
+                }else if movingStatus == .chooseNewMovingNode{
+                    for boxNodeNumber in boxNodeNumbers{
+                        let node = hitObject.node
+                        if node.name == "boxNode\(boxNodeNumber)"{
+                            currentMovingNode = node
                             currentMovingNode.opacity = 0.5
                             isMoving = true
                             selected = true
                             movingStatus = .currentMovingChosen
-                        print("should have changed  the currentNode")
-                        }
-                    }
-                    
-                    
-                }
-                //choosing currentmovingnode
-                for boxNodeNumber in boxNodeNumbers{
-                    let node = hitObject.node
-                    if node.name == "boxNode\(boxNodeNumber)"{
-                        
-                        print("helloo")
-                        if movingStatus == .currentMovingNotChosen{
-                            //change status to
-                            movingStatus = .chooseNewMovingNode
-                        }
-                        tapGestureRecognizer.isEnabled = false
-                        //if selected cube is moving, than select a new destination, allow the current cube to move to all destinations that are tapped
-                        //something is selected, and allows to move..
-                        /////***********
-                        //4
-                        /////******
-                        /////***********
-                        //B
-                        /////******
-                        if  movingStatus == .currentMovingChosen{
-                        if isMoving{
-                            selected = true
-                            tapGestureRecognizer.isEnabled = false
-                            //movingStatus = SelectionType.currentMovingChosen
-                            if movingStatus == SelectionType.currentMovingNotChosen{
-                                print(" changing selected and moving to false to start over")
-                                selected = false
-                                isMoving = false
-                                tapGestureRecognizer.isEnabled = false
-                            }
-                            print("ready to selected a new cube")
-                            print("status is \(movingStatus)")
-                            print("is selected is \(selected)")
-                            print("isMoving is \(isMoving)")
-                        }
+                            print("should have changed  the currentNode")
                             tapGestureRecognizer.isEnabled = false
                         }
-//*********************************************************************************************************************************************************************
-                        //if no cube is moving and if nothing is selected to be moved, than tapped cube is the currentCubeNode to be moved
-                        if movingStatus == .currentMovingNotChosen{
-                        if isMoving && selected{
-                            
-//                            lastMovingNode = currentMovingNode
-                            
-                            print("am here to change moving and selected to false")
-                            print("ismoving = \(isMoving)")
-                            print("selected is \(selected)")
-                        }
-                        }
-                        if !isMoving{
-                            if selected == false {
-                                //choose this selected cube to be the mover
-                                if !isMoving{
-                                    print("starting over")
-                                    currentMovingNode = node
-                                    movingStatus = .currentMovingChosen
-                                    /////***********
-                                    //1
-                                    /////******
-                                    print("this Cube chosen to be current cube\(currentMovingNode.name)")
-                                    tapGestureRecognizer.isEnabled = false
-                                }
-                                //something is selected, and allows to move..
-                                /////***********
-                                //2
-                                /////******
-                                selected = true
-                                isMoving = true
-                                tapGestureRecognizer.isEnabled = false
-                                print(movingStatus)
-                                print("isMoving is\(isMoving)")
-                                print("is selected \(selected)")
-                            }
-                        }
-                        //-----------------------------------------------
-                            currentBoxNumber = boxNodeNumber
-                            currentNode = node
-                            scaleAble = true
-                            tapGestureRecognizer.isEnabled = false
                     }
                 }
             }
         }
+        
+                
+        
         guard let touch = touches.first else {
             return
         }
@@ -707,25 +624,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
-        print("could touch")
-        
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
-        print("could touch")
-        
     }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
-        
         configuration.planeDetection = .horizontal
-        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -740,14 +649,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-
         let plane = self.planes.filter { plane in
             return plane.anchor.identifier == anchor.identifier
             }.first
         if plane == nil {
             return
         }
-        
         plane?.update(anchor: anchor as! ARPlaneAnchor)
     }
     
