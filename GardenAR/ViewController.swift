@@ -469,7 +469,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                         
                                         
                                         if hitObject.geometryIndex == 0{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, destinationNode.position.z + Float(boxLength)), duration: 0.5)
+                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(boxLengthD)/2) +  (Float(boxLength)/2)), duration: 0.5)
                                             eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
                                             eachBoxSize[boxNodeNumber]!.0.updateValue(boxLengthD, forKey: "z")
                                             eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
@@ -509,7 +509,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                             currentMovingNode.runAction(moveToTappedNode)
                                             print("top")
                                         }else if hitObject.geometryIndex == 5{
-                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(boxWidthD)/2) - (Float(boxWidth)/2), destinationNode.position.z), duration: 0.5)
+                                            let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(boxHightD)/2) - (Float(boxHight)/2), destinationNode.position.z), duration: 0.5)
                                             eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
                                             eachBoxSize[boxNodeNumber]!.0.updateValue(boxHightD, forKey: "y")
                                             eachBoxSize[boxNodeNumber]!.1.updateValue(boxColorD, forKey: "color")
