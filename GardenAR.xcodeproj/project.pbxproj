@@ -14,6 +14,23 @@
 		933148271F2512FE00CA7085 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 933148261F2512FE00CA7085 /* Assets.xcassets */; };
 		9331482A1F2512FE00CA7085 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 933148281F2512FE00CA7085 /* LaunchScreen.storyboard */; };
 		93455D391F2E0C5E00066876 /* overlay_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D381F2E0C5E00066876 /* overlay_grid.png */; };
+		93455D4E1F2F41DB00066876 /* bamboo-wood-semigloss-albedo.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D3C1F2F41D900066876 /* bamboo-wood-semigloss-albedo.png */; };
+		93455D4F1F2F41DB00066876 /* bamboo-wood-semigloss-metal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D3D1F2F41D900066876 /* bamboo-wood-semigloss-metal.png */; };
+		93455D501F2F41DB00066876 /* bamboo-wood-semigloss-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D3E1F2F41D900066876 /* bamboo-wood-semigloss-normal.png */; };
+		93455D511F2F41DB00066876 /* bamboo-wood-semigloss-roughness.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D3F1F2F41D900066876 /* bamboo-wood-semigloss-roughness.png */; };
+		93455D521F2F41DB00066876 /* oakfloor2-albedo.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D411F2F41D900066876 /* oakfloor2-albedo.png */; };
+		93455D531F2F41DB00066876 /* oakfloor2-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D421F2F41D900066876 /* oakfloor2-normal.png */; };
+		93455D541F2F41DB00066876 /* oakfloor2-roughness.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D431F2F41D900066876 /* oakfloor2-roughness.png */; };
+		93455D551F2F41DB00066876 /* rustediron-streaks-albedo.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D451F2F41D900066876 /* rustediron-streaks-albedo.png */; };
+		93455D561F2F41DB00066876 /* rustediron-streaks-metal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D461F2F41D900066876 /* rustediron-streaks-metal.png */; };
+		93455D571F2F41DB00066876 /* rustediron-streaks-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D471F2F41D900066876 /* rustediron-streaks-normal.png */; };
+		93455D581F2F41DB00066876 /* rustediron-streaks-roughness.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D481F2F41D900066876 /* rustediron-streaks-roughness.png */; };
+		93455D591F2F41DB00066876 /* scuffed-plastic-albedo.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D4A1F2F41D900066876 /* scuffed-plastic-albedo.png */; };
+		93455D5A1F2F41DB00066876 /* scuffed-plastic-metal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D4B1F2F41D900066876 /* scuffed-plastic-metal.png */; };
+		93455D5B1F2F41DB00066876 /* scuffed-plastic-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D4C1F2F41D900066876 /* scuffed-plastic-normal.png */; };
+		93455D5C1F2F41DB00066876 /* scuffed-plastic-roughness.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D4D1F2F41D900066876 /* scuffed-plastic-roughness.png */; };
+		93455D601F2F476C00066876 /* spherical.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5E1F2F476C00066876 /* spherical.jpg */; };
+		93455D611F2F476C00066876 /* sphericalBlurred.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5F1F2F476C00066876 /* sphericalBlurred.png */; };
 		9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9AE1F263299007063D4 /* OverlayPlane.swift */; };
 		9381F9B11F2633E7007063D4 /* overlay_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 9381F9B01F2633E7007063D4 /* overlay_grid.png */; };
 		9381F9B71F267BAD007063D4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9B61F267BAD007063D4 /* Utilities.swift */; };
@@ -29,6 +46,23 @@
 		933148291F2512FE00CA7085 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9331482B1F2512FE00CA7085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93455D381F2E0C5E00066876 /* overlay_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = overlay_grid.png; path = "../../../../../../Downloads/Hello-AR/Hello-AR/overlay_grid.png"; sourceTree = "<group>"; };
+		93455D3C1F2F41D900066876 /* bamboo-wood-semigloss-albedo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bamboo-wood-semigloss-albedo.png"; sourceTree = "<group>"; };
+		93455D3D1F2F41D900066876 /* bamboo-wood-semigloss-metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bamboo-wood-semigloss-metal.png"; sourceTree = "<group>"; };
+		93455D3E1F2F41D900066876 /* bamboo-wood-semigloss-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bamboo-wood-semigloss-normal.png"; sourceTree = "<group>"; };
+		93455D3F1F2F41D900066876 /* bamboo-wood-semigloss-roughness.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bamboo-wood-semigloss-roughness.png"; sourceTree = "<group>"; };
+		93455D411F2F41D900066876 /* oakfloor2-albedo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oakfloor2-albedo.png"; sourceTree = "<group>"; };
+		93455D421F2F41D900066876 /* oakfloor2-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oakfloor2-normal.png"; sourceTree = "<group>"; };
+		93455D431F2F41D900066876 /* oakfloor2-roughness.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oakfloor2-roughness.png"; sourceTree = "<group>"; };
+		93455D451F2F41D900066876 /* rustediron-streaks-albedo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rustediron-streaks-albedo.png"; sourceTree = "<group>"; };
+		93455D461F2F41D900066876 /* rustediron-streaks-metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rustediron-streaks-metal.png"; sourceTree = "<group>"; };
+		93455D471F2F41D900066876 /* rustediron-streaks-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rustediron-streaks-normal.png"; sourceTree = "<group>"; };
+		93455D481F2F41D900066876 /* rustediron-streaks-roughness.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rustediron-streaks-roughness.png"; sourceTree = "<group>"; };
+		93455D4A1F2F41D900066876 /* scuffed-plastic-albedo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scuffed-plastic-albedo.png"; sourceTree = "<group>"; };
+		93455D4B1F2F41D900066876 /* scuffed-plastic-metal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scuffed-plastic-metal.png"; sourceTree = "<group>"; };
+		93455D4C1F2F41D900066876 /* scuffed-plastic-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scuffed-plastic-normal.png"; sourceTree = "<group>"; };
+		93455D4D1F2F41D900066876 /* scuffed-plastic-roughness.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scuffed-plastic-roughness.png"; sourceTree = "<group>"; };
+		93455D5E1F2F476C00066876 /* spherical.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = spherical.jpg; sourceTree = "<group>"; };
+		93455D5F1F2F476C00066876 /* sphericalBlurred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sphericalBlurred.png; sourceTree = "<group>"; };
 		9381F9AE1F263299007063D4 /* OverlayPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPlane.swift; sourceTree = "<group>"; };
 		9381F9B01F2633E7007063D4 /* overlay_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = overlay_grid.png; path = "../../../../../../Downloads/Hello-AR/Hello-AR/overlay_grid.png"; sourceTree = "<group>"; };
 		9381F9B61F267BAD007063D4 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -69,6 +103,8 @@
 				933148211F2512FE00CA7085 /* ViewController.swift */,
 				9381F9B61F267BAD007063D4 /* Utilities.swift */,
 				9381F9AE1F263299007063D4 /* OverlayPlane.swift */,
+				93455D5D1F2F476C00066876 /* Environment */,
+				93455D3A1F2F41D900066876 /* Materials */,
 				9381F9B01F2633E7007063D4 /* overlay_grid.png */,
 				93455D381F2E0C5E00066876 /* overlay_grid.png */,
 				933148231F2512FE00CA7085 /* Main.storyboard */,
@@ -77,6 +113,71 @@
 				9331482B1F2512FE00CA7085 /* Info.plist */,
 			);
 			path = GardenAR;
+			sourceTree = "<group>";
+		};
+		93455D3A1F2F41D900066876 /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				93455D3B1F2F41D900066876 /* bamboo-wood-semigloss */,
+				93455D401F2F41D900066876 /* oakfloor2 */,
+				93455D441F2F41D900066876 /* rustediron-streaks */,
+				93455D491F2F41D900066876 /* scuffed-plastic */,
+			);
+			name = Materials;
+			path = "../../../../../../Downloads/PBROrbs-iOS10-SceneKit-master/PBROrbs/Assets/Materials";
+			sourceTree = "<group>";
+		};
+		93455D3B1F2F41D900066876 /* bamboo-wood-semigloss */ = {
+			isa = PBXGroup;
+			children = (
+				93455D3C1F2F41D900066876 /* bamboo-wood-semigloss-albedo.png */,
+				93455D3D1F2F41D900066876 /* bamboo-wood-semigloss-metal.png */,
+				93455D3E1F2F41D900066876 /* bamboo-wood-semigloss-normal.png */,
+				93455D3F1F2F41D900066876 /* bamboo-wood-semigloss-roughness.png */,
+			);
+			path = "bamboo-wood-semigloss";
+			sourceTree = "<group>";
+		};
+		93455D401F2F41D900066876 /* oakfloor2 */ = {
+			isa = PBXGroup;
+			children = (
+				93455D411F2F41D900066876 /* oakfloor2-albedo.png */,
+				93455D421F2F41D900066876 /* oakfloor2-normal.png */,
+				93455D431F2F41D900066876 /* oakfloor2-roughness.png */,
+			);
+			path = oakfloor2;
+			sourceTree = "<group>";
+		};
+		93455D441F2F41D900066876 /* rustediron-streaks */ = {
+			isa = PBXGroup;
+			children = (
+				93455D451F2F41D900066876 /* rustediron-streaks-albedo.png */,
+				93455D461F2F41D900066876 /* rustediron-streaks-metal.png */,
+				93455D471F2F41D900066876 /* rustediron-streaks-normal.png */,
+				93455D481F2F41D900066876 /* rustediron-streaks-roughness.png */,
+			);
+			path = "rustediron-streaks";
+			sourceTree = "<group>";
+		};
+		93455D491F2F41D900066876 /* scuffed-plastic */ = {
+			isa = PBXGroup;
+			children = (
+				93455D4A1F2F41D900066876 /* scuffed-plastic-albedo.png */,
+				93455D4B1F2F41D900066876 /* scuffed-plastic-metal.png */,
+				93455D4C1F2F41D900066876 /* scuffed-plastic-normal.png */,
+				93455D4D1F2F41D900066876 /* scuffed-plastic-roughness.png */,
+			);
+			path = "scuffed-plastic";
+			sourceTree = "<group>";
+		};
+		93455D5D1F2F476C00066876 /* Environment */ = {
+			isa = PBXGroup;
+			children = (
+				93455D5E1F2F476C00066876 /* spherical.jpg */,
+				93455D5F1F2F476C00066876 /* sphericalBlurred.png */,
+			);
+			name = Environment;
+			path = "../../../../../../Downloads/PBROrbs-iOS10-SceneKit-master/PBROrbs/Assets/Environment";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,12 +238,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93455D5B1F2F41DB00066876 /* scuffed-plastic-normal.png in Resources */,
 				93455D391F2E0C5E00066876 /* overlay_grid.png in Resources */,
+				93455D611F2F476C00066876 /* sphericalBlurred.png in Resources */,
+				93455D4E1F2F41DB00066876 /* bamboo-wood-semigloss-albedo.png in Resources */,
 				933148201F2512FE00CA7085 /* art.scnassets in Resources */,
+				93455D4F1F2F41DB00066876 /* bamboo-wood-semigloss-metal.png in Resources */,
+				93455D5A1F2F41DB00066876 /* scuffed-plastic-metal.png in Resources */,
 				9381F9B11F2633E7007063D4 /* overlay_grid.png in Resources */,
+				93455D561F2F41DB00066876 /* rustediron-streaks-metal.png in Resources */,
+				93455D591F2F41DB00066876 /* scuffed-plastic-albedo.png in Resources */,
 				9331482A1F2512FE00CA7085 /* LaunchScreen.storyboard in Resources */,
+				93455D501F2F41DB00066876 /* bamboo-wood-semigloss-normal.png in Resources */,
+				93455D541F2F41DB00066876 /* oakfloor2-roughness.png in Resources */,
 				933148271F2512FE00CA7085 /* Assets.xcassets in Resources */,
+				93455D531F2F41DB00066876 /* oakfloor2-normal.png in Resources */,
+				93455D521F2F41DB00066876 /* oakfloor2-albedo.png in Resources */,
+				93455D551F2F41DB00066876 /* rustediron-streaks-albedo.png in Resources */,
+				93455D511F2F41DB00066876 /* bamboo-wood-semigloss-roughness.png in Resources */,
+				93455D5C1F2F41DB00066876 /* scuffed-plastic-roughness.png in Resources */,
 				933148251F2512FE00CA7085 /* Main.storyboard in Resources */,
+				93455D581F2F41DB00066876 /* rustediron-streaks-roughness.png in Resources */,
+				93455D571F2F41DB00066876 /* rustediron-streaks-normal.png in Resources */,
+				93455D601F2F476C00066876 /* spherical.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

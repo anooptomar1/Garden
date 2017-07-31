@@ -10,6 +10,7 @@ import UIKit
 import SceneKit
 import SpriteKit
 import ARKit
+import QuartzCore
 
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
@@ -96,7 +97,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         let scene = SCNScene()
         // Set the scene to the view
         sceneView.scene = scene
-        sceneView.autoenablesDefaultLighting = true
+        //sceneView.autoenablesDefaultLighting = true
+let env = UIImage(named: "spherical")
+sceneView.scene.lightingEnvironment.contents = env
+sceneView.scene.lightingEnvironment.intensity = 2.0
         overlay = SKScene(size:CGSize(width:375,height:750))
         overlay.scaleMode = .aspectFill
         overlay.zPosition = +10
@@ -109,6 +113,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
      
+        //insertSpotLight(position: SCNVector3(0,1.0,0))
+    }
+    private func insertSpotLight(position: SCNVector3){
+        let spotLight = SCNLight()
+        spotLight.type = .ambient
+        spotLight.spotInnerAngle = 45
+        spotLight.spotOuterAngle = 45
+        spotLight.castsShadow = true
+        let spotNode = SCNNode()
+        spotNode.name = "SpotNode"
+        spotNode.light = spotLight
+        spotNode.position = position
+        
+        spotNode.eulerAngles = SCNVector3(-Double.pi/2.0,0,-0.2)
+        self.sceneView.scene.rootNode.addChildNode(spotNode)
     }
     var tapGestureRecognizer = UITapGestureRecognizer()
     var panGestureRecognizer = UIPanGestureRecognizer()
@@ -349,16 +368,42 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         material.diffuse.contents = color
         let top = SCNMaterial()
         top.diffuse.contents = color
+            top.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            top.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            top.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            top.normal.contents = UIImage(named: "scuffed-plastic-normal")
         let bottom = SCNMaterial()
         bottom.diffuse.contents = color
+            bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            bottom.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            bottom.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            bottom.normal.contents = UIImage(named: "scuffed-plastic-normal")
         let left = SCNMaterial()
         left.diffuse.contents = color
+            left.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            left.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            left.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            left.normal.contents = UIImage(named: "scuffed-plastic-normal")
         let right = SCNMaterial()
         right.diffuse.contents = color
+            right.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            right.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            right.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            right.normal.contents = UIImage(named: "scuffed-plastic-normal")
         let front = SCNMaterial()
         front.diffuse.contents = color
+            front.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            front.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            front.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            front.normal.contents = UIImage(named: "scuffed-plastic-normal")
         let back = SCNMaterial()
         back.diffuse.contents = color
+            back.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            back.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
+            back.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            back.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            
+            
         boxGeometry.chamferRadius = 0
         boxGeometry.materials = [front, right, back, left, top, bottom]
         //boxGeometry.materials = [material]
@@ -395,16 +440,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         chooseBlock = boolien
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-//
-//            if movingStatus == SelectionType.currentMovingChosen{
-//                currentMovingNode.opacity = 0.5
-//            }else if movingStatus == SelectionType.currentMovingNotChosen{
-//                currentMovingNode.opacity = 1
-//                //currentMovingNode.removeAllActions()
-//            }
-      
         
-        
+//        let estimate = self.sceneView.session.currentFrame?.lightEstimate
+//        if estimate == nil{
+//            return
+//        }
+//        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
+//        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
     }
     func updateAllCordinates(){
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
