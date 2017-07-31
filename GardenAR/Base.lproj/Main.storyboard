@@ -21,56 +21,66 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D28-6X-bSG" userLabel="addBtn">
-                                <rect key="frame" x="161" y="595" width="52" height="52"/>
+                                <rect key="frame" x="291" y="579" width="68" height="68"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="52" id="5bV-0V-UHd"/>
-                                    <constraint firstAttribute="width" constant="52" id="XGy-tj-d13"/>
+                                    <constraint firstAttribute="height" constant="68" id="5bV-0V-UHd"/>
+                                    <constraint firstAttribute="width" constant="68" id="XGy-tj-d13"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="adBtnImg"/>
+                                <state key="normal" title="Button" image="purpleAddIcon"/>
                                 <connections>
                                     <action selector="addObjects:" destination="BV1-FR-VrT" eventType="touchUpInside" id="NMl-ER-aj0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Rn-LW-L7S" userLabel="camBtn">
-                                <rect key="frame" x="44" y="600" width="47" height="42"/>
+                                <rect key="frame" x="16" y="20" width="61" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="47" id="C0W-qh-Ikc"/>
-                                    <constraint firstAttribute="height" constant="42" id="Saf-y4-tl0"/>
+                                    <constraint firstAttribute="width" constant="61" id="C0W-qh-Ikc"/>
+                                    <constraint firstAttribute="height" constant="55" id="Saf-y4-tl0"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="cameraBtn"/>
+                                <state key="normal" title="Button" image="purpleComIcon"/>
                                 <connections>
                                     <action selector="takeScreenshot:" destination="BV1-FR-VrT" eventType="touchUpInside" id="ayX-IN-NRL"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RJc-tC-7YW" userLabel="minusBtn">
-                                <rect key="frame" x="299" y="582" width="52" height="65"/>
+                                <rect key="frame" x="299" y="506" width="52" height="65"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="cb7-Ln-0jk"/>
                                     <constraint firstAttribute="width" constant="52" id="kv2-EF-kok"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="minusBtn3"/>
+                                <state key="normal" title="Button" image="purpleMinusIcon"/>
                                 <connections>
                                     <action selector="scaleDown:" destination="BV1-FR-VrT" eventType="touchUpInside" id="fvT-Mk-n9p"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GwI-T8-Nut" userLabel="plusBtn">
-                                <rect key="frame" x="299" y="509" width="52" height="65"/>
+                                <rect key="frame" x="299" y="438" width="52" height="65"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="A7y-iI-eBu"/>
                                     <constraint firstAttribute="width" constant="52" id="xHE-20-vnn"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="plusBtn3"/>
+                                <state key="normal" title="Button" image="purplePlusIcon"/>
                                 <connections>
                                     <action selector="scaleUp:" destination="BV1-FR-VrT" eventType="touchUpInside" id="hGN-Ji-U9w"/>
                                 </connections>
                             </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zMd-5m-WCH">
+                                <rect key="frame" x="301" y="31" width="51" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="49" id="nj1-JY-uJo"/>
+                                    <constraint firstAttribute="height" constant="31" id="riQ-lL-Xuc"/>
+                                </constraints>
+                                <color key="tintColor" red="0.34621506930000001" green="0.1567531824" blue="0.51876211169999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="onTintColor" red="0.34621506930000001" green="0.1567531824" blue="0.51876211169999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" red="0.80000001190000003" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DTy-iq-pPG">
-                                <rect key="frame" x="299" y="20" width="52" height="67"/>
+                                <rect key="frame" x="16" y="580" width="52" height="67"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="52" id="Mfl-wQ-tFa"/>
                                     <constraint firstAttribute="height" constant="67" id="WMX-HL-tlU"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="trashIcon"/>
+                                <state key="normal" title="Button" image="purpleTrashIcon"/>
                                 <connections>
                                     <action selector="deleteAction:" destination="BV1-FR-VrT" eventType="touchUpInside" id="fkD-Gf-OVW"/>
                                 </connections>
@@ -78,20 +88,22 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="bottom" secondItem="RJc-tC-7YW" secondAttribute="bottom" constant="20" id="1df-XU-IrW"/>
-                            <constraint firstItem="8Rn-LW-L7S" firstAttribute="leading" secondItem="u0f-2W-hGZ" secondAttribute="leading" constant="44" id="30H-M3-DK4"/>
+                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="bottom" secondItem="RJc-tC-7YW" secondAttribute="bottom" constant="96" id="1df-XU-IrW"/>
+                            <constraint firstItem="8Rn-LW-L7S" firstAttribute="leading" secondItem="u0f-2W-hGZ" secondAttribute="leading" constant="16" id="30H-M3-DK4"/>
                             <constraint firstItem="u0f-2W-hGZ" firstAttribute="bottom" secondItem="D28-6X-bSG" secondAttribute="bottom" constant="20" id="FEV-YR-OLX"/>
-                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="bottom" secondItem="8Rn-LW-L7S" secondAttribute="bottom" constant="25" id="HKB-qJ-vp2"/>
-                            <constraint firstItem="D28-6X-bSG" firstAttribute="centerX" secondItem="gu1-rK-6b3" secondAttribute="centerX" id="Jad-0T-vGM"/>
+                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="bottom" secondItem="8Rn-LW-L7S" secondAttribute="bottom" constant="592" id="HKB-qJ-vp2"/>
+                            <constraint firstItem="D28-6X-bSG" firstAttribute="centerX" secondItem="gu1-rK-6b3" secondAttribute="centerX" constant="137.5" id="Jad-0T-vGM"/>
+                            <constraint firstItem="zMd-5m-WCH" firstAttribute="top" secondItem="u0f-2W-hGZ" secondAttribute="top" constant="11" id="PH6-n0-SKc"/>
                             <constraint firstItem="u0f-2W-hGZ" firstAttribute="trailing" secondItem="GwI-T8-Nut" secondAttribute="trailing" constant="24" id="Rp0-d2-TPv"/>
-                            <constraint firstItem="DTy-iq-pPG" firstAttribute="top" secondItem="u0f-2W-hGZ" secondAttribute="top" id="WWl-Ws-51V"/>
+                            <constraint firstItem="DTy-iq-pPG" firstAttribute="top" secondItem="u0f-2W-hGZ" secondAttribute="top" constant="560" id="WWl-Ws-51V"/>
                             <constraint firstItem="9R7-6d-dIb" firstAttribute="leading" secondItem="u0f-2W-hGZ" secondAttribute="leading" id="XID-Er-1jl"/>
                             <constraint firstItem="9R7-6d-dIb" firstAttribute="trailing" secondItem="u0f-2W-hGZ" secondAttribute="trailing" id="bZw-YT-R6u"/>
-                            <constraint firstItem="RJc-tC-7YW" firstAttribute="top" secondItem="GwI-T8-Nut" secondAttribute="bottom" constant="8" id="gTC-0M-kJF"/>
+                            <constraint firstItem="RJc-tC-7YW" firstAttribute="top" secondItem="GwI-T8-Nut" secondAttribute="bottom" constant="3" id="gTC-0M-kJF"/>
+                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="trailing" secondItem="zMd-5m-WCH" secondAttribute="trailing" constant="25" id="hGv-66-aBu"/>
                             <constraint firstItem="9R7-6d-dIb" firstAttribute="bottom" secondItem="u0f-2W-hGZ" secondAttribute="bottom" id="m1I-KF-PTF"/>
                             <constraint firstItem="9R7-6d-dIb" firstAttribute="top" secondItem="gu1-rK-6b3" secondAttribute="top" id="mCZ-xL-CHG"/>
                             <constraint firstItem="u0f-2W-hGZ" firstAttribute="trailing" secondItem="RJc-tC-7YW" secondAttribute="trailing" constant="24" id="mxC-8K-1vn"/>
-                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="trailing" secondItem="DTy-iq-pPG" secondAttribute="trailing" constant="24" id="s0S-Cc-7pA"/>
+                            <constraint firstItem="u0f-2W-hGZ" firstAttribute="trailing" secondItem="DTy-iq-pPG" secondAttribute="trailing" constant="307" id="s0S-Cc-7pA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="u0f-2W-hGZ"/>
                     </view>
@@ -110,10 +122,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="adBtnImg" width="128" height="128"/>
-        <image name="cameraBtn" width="118" height="106"/>
-        <image name="minusBtn3" width="128" height="160"/>
-        <image name="plusBtn3" width="128" height="160"/>
-        <image name="trashIcon" width="99" height="127"/>
+        <image name="purpleAddIcon" width="202" height="202"/>
+        <image name="purpleComIcon" width="159" height="145"/>
+        <image name="purpleMinusIcon" width="148" height="180"/>
+        <image name="purplePlusIcon" width="148" height="180"/>
+        <image name="purpleTrashIcon" width="143" height="178"/>
     </resources>
 </document>

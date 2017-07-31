@@ -82,6 +82,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var boxMetalD = UIImage()
     var boxRoughnessD = UIImage()
     var boxNormalD = UIImage()
+//    var top = SCNMaterial()
+//    var bottom = SCNMaterial()
+//    var left = SCNMaterial()
+//    var right = SCNMaterial()
+//    var front = SCNMaterial()
+//    var back = SCNMaterial()
+    
     var currentNode = SCNNode()
     var currentMovingNode = SCNNode()
     var lastMovingNode = SCNNode()
@@ -107,6 +114,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
 let env = UIImage(named: "spherical")
 sceneView.scene.lightingEnvironment.contents = env
 sceneView.scene.lightingEnvironment.intensity = 2.0
+        
         overlay = SKScene(size:CGSize(width:375,height:750))
         overlay.scaleMode = .aspectFill
         overlay.zPosition = +10
@@ -119,13 +127,13 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
      
-        //insertSpotLight(position: SCNVector3(0,1.0,0))
+        insertSpotLight(position: SCNVector3(0,1.0,1.0))
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
         spotLight.type = .ambient
-        spotLight.spotInnerAngle = 45
-        spotLight.spotOuterAngle = 45
+//        spotLight.spotInnerAngle = 45
+//        spotLight.spotOuterAngle = 45
         spotLight.castsShadow = true
         let spotNode = SCNNode()
         spotNode.name = "SpotNode"
@@ -196,13 +204,49 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
             print("eachboxSize  after scale is \(eachBoxSize)")
             currentNode.geometry = geo
-            let material = SCNMaterial()
-            material.diffuse.contents = boxColor
-            geo.materials = [material]
+            let top = SCNMaterial()
+            top.diffuse.contents = boxColor
+            top.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            top.roughness.contents = boxRoughness
+            top.metalness.contents = boxMetal
+            top.normal.contents = boxNormal
+            let bottom = SCNMaterial()
+            bottom.diffuse.contents = boxColor
+            bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            bottom.roughness.contents = boxRoughness
+            bottom.metalness.contents = boxMetal
+            bottom.normal.contents = boxNormal
+            let left = SCNMaterial()
+            left.diffuse.contents = boxColor
+            left.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            left.roughness.contents = boxRoughness
+            left.metalness.contents = boxMetal
+            left.normal.contents = boxNormal
+            let right = SCNMaterial()
+            right.diffuse.contents = boxColor
+            right.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            right.roughness.contents = boxRoughness
+            right.metalness.contents = boxMetal
+            right.normal.contents = boxNormal
+            let front = SCNMaterial()
+            front.diffuse.contents = boxColor
+            front.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            front.roughness.contents = boxRoughness
+            front.metalness.contents = boxMetal
+            front.normal.contents = boxNormal
+            //let back = SCNMaterial()
+            let back = SCNMaterial()
+            back.diffuse.contents = boxColor
+            back.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            back.roughness.contents = boxRoughness
+            back.metalness.contents = boxMetal
+            back.normal.contents = boxNormal
+            geo.materials = [front, right, back, left, top, bottom]
             print(boxGeometry.width)
             print(boxGeometry.height)
             print(boxGeometry.length)
             print(currentNode.name)
+            print("added node \(eachBoxSize)")
         }
     }
     
@@ -251,14 +295,49 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
             eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
             currentNode.geometry = geo
-            let material = SCNMaterial()
-            material.diffuse.contents = boxColor
-            geo.materials = [material]
+            let top = SCNMaterial()
+            top.diffuse.contents = boxColor
+            top.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            top.roughness.contents = boxRoughness
+            top.metalness.contents = boxMetal
+            top.normal.contents = boxNormal
+            let bottom = SCNMaterial()
+            bottom.diffuse.contents = boxColor
+            bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            bottom.roughness.contents = boxRoughness
+            bottom.metalness.contents = boxMetal
+            bottom.normal.contents = boxNormal
+            let left = SCNMaterial()
+            left.diffuse.contents = boxColor
+            left.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            left.roughness.contents = boxRoughness
+            left.metalness.contents = boxMetal
+            left.normal.contents = boxNormal
+            let right = SCNMaterial()
+            right.diffuse.contents = boxColor
+            right.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            right.roughness.contents = boxRoughness
+            right.metalness.contents = boxMetal
+            right.normal.contents = boxNormal
+            let front = SCNMaterial()
+            front.diffuse.contents = boxColor
+            front.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            front.roughness.contents = boxRoughness
+            front.metalness.contents = boxMetal
+            front.normal.contents = boxNormal
+            let back = SCNMaterial()
+            back.diffuse.contents = boxColor
+            back.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            back.roughness.contents = boxRoughness
+            back.metalness.contents = boxMetal
+            back.normal.contents = boxNormal
+            geo.materials = [front, right, back, left, top, bottom]
             print(boxRoughness)
             print(boxGeometry.width)
             print(boxGeometry.height)
             print(boxGeometry.length)
             print(currentNode.name)
+            print("added node \(eachBoxSize)")
         }
     }
     @IBAction func deleteAction(_ sender: Any) {
@@ -306,10 +385,15 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
 //            //boxNode.opacity = 0.5
 //        }
     }
+    enum PanelOpened{
+        case panelOpened
+        case panelClosed
+    }
     enum AddObject {
         case addAble
         case notAddAble
     }
+    var panelState = PanelOpened.panelClosed
     var addingState = AddObject.addAble
     @objc func tapped(recognizer :UIGestureRecognizer) {
         if addingState == .addAble{
@@ -435,7 +519,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
-        print("added node \(boxNode.name)")
+        print("added node \(eachBoxSize)")
             
         }
     }
@@ -446,14 +530,18 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
   
     //close and open panel
     func closePanel(){
+        panelState = .panelClosed
         let moveDown = SKAction.moveTo(y: -(view.frame.height / 1.5), duration: 0.3)
         openedPanel = false
         panel.run(moveDown)
+        tapGestureRecognizer.isEnabled = true
     }
     func openPanel(){
+        panelState = .panelOpened
         let moveUp = SKAction.moveTo(y: -60, duration: 0.3)
         openedPanel = true
         panel.run(moveUp)
+        tapGestureRecognizer.isEnabled = false
     }
     //choose item from panel
     func chooseBlockItem(boolien: Bool){
@@ -464,12 +552,12 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
-//        let estimate = self.sceneView.session.currentFrame?.lightEstimate
-//        if estimate == nil{
-//            return
-//        }
-//        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
-//        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
+        let estimate = self.sceneView.session.currentFrame?.lightEstimate
+        if estimate == nil{
+            return
+        }
+        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
+        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
     }
     func updateAllCordinates(){
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
@@ -530,7 +618,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             let hitList = sceneView.hitTest(location, options: nil)
             if let hitObject = hitList.first{
                 
-                if movingStatus ==  .currentMovingNotChosen{
+                if movingStatus ==  .currentMovingNotChosen && panelState == .panelClosed{
                     for boxNodeNumber in boxNodeNumbers{
                         let node = hitObject.node
                         if node.name == "boxNode\(boxNodeNumber)"{
