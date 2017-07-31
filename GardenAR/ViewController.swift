@@ -267,7 +267,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
 //            //boxNode.opacity = 0.5
 //        }
     }
+    enum AddObject {
+        case addAble
+        case notAddAble
+    }
+    var addingState = AddObject.addAble
     @objc func tapped(recognizer :UIGestureRecognizer) {
+        if addingState == .addAble{
             let sceneView = recognizer.view as! ARSCNView
             let touchLocation = recognizer.location(in: sceneView)
             let hitTestResult = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
@@ -280,7 +286,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 
                 //pick the chosen color, add cube to scene in that color
                 if chosenStatus == .redBox{
-                addBox(hitResult: hitResult, color: UIColor.red)
+                    addBox(hitResult: hitResult, color: UIColor.red)
                 }else if chosenStatus == .blueBox{
                     addBox(hitResult: hitResult, color: UIColor(red:0.29, green:0.56, blue:0.89, alpha:1.0))
                 }else if chosenStatus == .orangeBox{
@@ -305,8 +311,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             }else if hitTestResult.isEmpty{
                 print("touchlocation is empty")
             }
+        }
     }
-    
   
     @IBAction func takeScreenshot(_ sender: Any) {
         print("screenshot")
@@ -459,6 +465,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 self.currentBoxNumber = boxNodeNumber
                                 print("currentMovingNode name is\(self.currentMovingNode.name)")
                                 //
+                                self.addingState = .notAddAble
                                 self.scaleAble = true
                                 self.currentMovingNode.opacity = 0.5
                                 group.leave()
@@ -566,56 +573,67 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         let touchedNode = overlay.atPoint(touchLocation)
         if(touchedNode.name == "boxIcon"){
             chosenStatus = NodeType.redBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "blueBoxIcon"){
             chosenStatus = NodeType.blueBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "orangeBoxIcon"){
             chosenStatus = NodeType.orangeBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "yellowBoxIcon"){
             chosenStatus = NodeType.yellowBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "greenBoxIcon"){
             chosenStatus = NodeType.greenBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "purpleBoxIcon"){
             chosenStatus = NodeType.PurpleBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "pinkBoxIcon"){
             chosenStatus = NodeType.pinkBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "brownBoxIcon"){
             chosenStatus = NodeType.brownBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "blackBoxIcon"){
             chosenStatus = NodeType.blackBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "greyBoxIcon"){
             chosenStatus = NodeType.greyBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
         if(touchedNode.name == "whiteBoxIcon"){
             chosenStatus = NodeType.whiteBox
+            addingState = .addAble
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
