@@ -127,7 +127,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
      
-        insertSpotLight(position: SCNVector3(0,1.0,1.0))
+        //insertSpotLight(position: SCNVector3(0,1.0,1.0))
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
@@ -584,13 +584,13 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
-        let estimate = self.sceneView.session.currentFrame?.lightEstimate
-        if estimate == nil{
-            return
-        }
-        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
-        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
-        
+//        let estimate = self.sceneView.session.currentFrame?.lightEstimate
+//        if estimate == nil{
+//            return
+//        }
+//        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
+//        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
+//        
     }
     func updateAllCordinates(){
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
