@@ -73,6 +73,9 @@
                                 <color key="tintColor" red="0.34621506930000001" green="0.1567531824" blue="0.51876211169999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="onTintColor" red="0.34621506930000001" green="0.1567531824" blue="0.51876211169999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" red="0.80000001190000003" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="switching:" destination="BV1-FR-VrT" eventType="valueChanged" id="lba-7u-LEl"/>
+                                </connections>
                             </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DTy-iq-pPG">
                                 <rect key="frame" x="16" y="580" width="52" height="67"/>

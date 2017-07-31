@@ -437,6 +437,42 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         }
     }
   
+    @IBAction func switching(_ sender: UISwitch) {
+        let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
+        configuration.planeDetection = []
+        self.sceneView.session.run(configuration, options: [])
+        
+        if sender.isOn == true{
+            for plane in self.planes{
+                plane.planeGeometry.materials.forEach({ (material) in
+                    material.diffuse.contents = UIImage(named:"overlay_grid.png")
+                })
+            }
+        }else{
+            for plane in self.planes{
+                plane.planeGeometry.materials.forEach({ (material) in
+                    material.diffuse.contents = UIColor.clear
+                })
+            }
+        }
+        
+        
+        
+        
+    }
+//    @IBAction func `switch`(_ sender: Any) {
+//
+//        let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
+//        configuration.planeDetection = []
+//        self.sceneView.session.run(configuration, options: [])
+//        //turn off the grid
+//        for plane in self.planes{
+//            plane.planeGeometry.materials.forEach({ (material) in
+//                material.diffuse.contents = UIColor.clear
+//            })
+//        }
+//    }
+    
     @IBAction func takeScreenshot(_ sender: Any) {
         print("screenshot")
     }
@@ -524,10 +560,6 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         }
     }
     
-    
-    
-    
-  
     //close and open panel
     func closePanel(){
         panelState = .panelClosed
@@ -558,6 +590,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         }
         let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
         spotNode?.light?.intensity = (estimate?.ambientIntensity)!
+        
     }
     func updateAllCordinates(){
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
@@ -593,7 +626,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
     }
     func showHiglightOfDestinationFace(material: SCNMaterial){
         let highlight = CABasicAnimation(keyPath: "diffuse.contents")
-        highlight.toValue = UIColor.white
+        highlight.toValue = UIColor.black
         highlight.duration = 1.0
         highlight.autoreverses = true
         highlight.isRemovedOnCompletion = true
