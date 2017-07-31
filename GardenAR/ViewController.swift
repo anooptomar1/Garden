@@ -38,7 +38,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var overlay: SKScene!
     var planes = [OverlayPlane]()
     // [nodeName: (["x": Int], ["color": "selectedColor"])]
-    var eachBoxSize: [Int: ([String: CGFloat], [String: UIColor])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": UIColor.brown])]
+    var eachBoxSize: [Int: ([String: CGFloat], [String: UIImage], [String: UIImage], [String: UIImage], [String: UIImage] )] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": UIImage(named: "scuffed-plastic-albedo")!], ["metal": UIImage(named: "scuffed-plastic-metal")!], ["roughness": UIImage(named: "scuffed-plastic-roughness")!], ["normal": UIImage(named: "scuffed-plastic-normal")!])]
     //var boxColor = String()
     var openedPanel = false
     //status
@@ -71,11 +71,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var boxWidth = CGFloat(0.2)
     var boxHight = CGFloat(0.2)
     var boxLength = CGFloat(0.2)
+    var boxColor = UIImage()
+    var boxMetal = UIImage()
+    var boxRoughness = UIImage()
+    var boxNormal = UIImage()
     var boxWidthD = CGFloat(0.2)
     var boxHightD = CGFloat(0.2)
     var boxLengthD = CGFloat(0.2)
-    var boxColorD = UIColor()
-    var boxColor = UIColor()
+    var boxColorD = UIImage()
+    var boxMetalD = UIImage()
+    var boxRoughnessD = UIImage()
+    var boxNormalD = UIImage()
     var currentNode = SCNNode()
     var currentMovingNode = SCNNode()
     var lastMovingNode = SCNNode()
@@ -176,12 +182,18 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             boxHight = eachBoxSize[currentBoxNumber]!.0["y"]! + 0.01
             boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]! + 0.01
             boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+            boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
+            boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
+            boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height:  boxHight, length: boxLength, chamferRadius: 0)
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
             eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+            eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
+            eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
+            eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
             print("eachboxSize  after scale is \(eachBoxSize)")
             currentNode.geometry = geo
             let material = SCNMaterial()
@@ -224,6 +236,10 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             boxHight = eachBoxSize[currentBoxNumber]!.0["y"]! - 0.01
             boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]! - 0.01
             boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+            boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
+            boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
+            boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
+            
             //eachBoxSize[currentBoxNumber]
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
@@ -231,10 +247,14 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
             eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+            eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
+            eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
+            eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
             currentNode.geometry = geo
             let material = SCNMaterial()
             material.diffuse.contents = boxColor
             geo.materials = [material]
+            print(boxRoughness)
             print(boxGeometry.width)
             print(boxGeometry.height)
             print(boxGeometry.length)
@@ -305,27 +325,27 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
                 
                 //pick the chosen color, add cube to scene in that color
                 if chosenStatus == .redBox{
-                    addBox(hitResult: hitResult, color: UIColor.red)
+                    addBox(hitResult: hitResult, color: UIImage(named: "blockIcon")!)
                 }else if chosenStatus == .blueBox{
-                    addBox(hitResult: hitResult, color: UIColor(red:0.29, green:0.56, blue:0.89, alpha:1.0))
+                    addBox(hitResult: hitResult, color: UIImage(named: "blueBlockIcon")!)
                 }else if chosenStatus == .orangeBox{
-                    addBox(hitResult: hitResult, color: UIColor.orange)
+                    addBox(hitResult: hitResult, color: UIImage(named: "orangeBlockIcon")!)
                 }else if chosenStatus == .yellowBox{
-                    addBox(hitResult: hitResult, color: UIColor.yellow)
+                    addBox(hitResult: hitResult, color: UIImage(named: "yellowBlockIcon")!)
                 }else if chosenStatus == .greenBox{
-                    addBox(hitResult: hitResult, color: UIColor.green)
+                    addBox(hitResult: hitResult, color: UIImage(named: "greenBlockIcon")!)
                 }else if chosenStatus == .PurpleBox{
-                    addBox(hitResult: hitResult, color: UIColor.purple)
+                    addBox(hitResult: hitResult, color: UIImage(named: "purpleBlockIcon")!)
                 }else if chosenStatus == .pinkBox{
-                    addBox(hitResult: hitResult, color: UIColor(red:0.90, green:0.42, blue:1.00, alpha:1.0))
+                    addBox(hitResult: hitResult, color: UIImage(named: "pinkBlockIcon")!)
                 }else if chosenStatus == .blackBox{
-                    addBox(hitResult: hitResult, color: UIColor.black)
+                    addBox(hitResult: hitResult, color: UIImage(named: "blackBockIcon")!)
                 }else if chosenStatus == .greyBox{
-                    addBox(hitResult: hitResult, color: UIColor.gray)
+                    addBox(hitResult: hitResult, color: UIImage(named: "greyBlockIcon")!)
                 }else if chosenStatus == .brownBox{
-                    addBox(hitResult: hitResult, color: UIColor.brown)
+                    addBox(hitResult: hitResult, color: UIImage(named: "brownBlockIcon")!)
                 }else if chosenStatus == .whiteBox{
-                    addBox(hitResult: hitResult, color: UIColor.white)
+                    addBox(hitResult: hitResult, color: UIImage(named: "whiteBlockicon")!)
                 }
             }else if hitTestResult.isEmpty{
                 print("touchlocation is empty")
@@ -348,7 +368,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         
     }
     var addingNewCube = Bool()
-    private func addBox(hitResult :ARHitTestResult, color: UIColor) {
+    private func addBox(hitResult :ARHitTestResult, color: UIImage) {
         //disactivate selected and scaleable
         scaleAble = false
         selected = false
@@ -363,53 +383,56 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         boxWidth = 0.2
         boxHight = 0.2
         boxLength = 0.2
+            boxMetal = UIImage(named: "scuffed-plastic-metal")!
+            boxRoughness = UIImage(named: "scuffed-plastic-roughness")!
+            boxNormal = UIImage(named: "scuffed-plastic-metal")!
         boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
         let material = SCNMaterial()
         material.diffuse.contents = color
         let top = SCNMaterial()
         top.diffuse.contents = color
             top.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            top.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            top.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            top.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            top.roughness.contents = boxRoughness
+            top.metalness.contents = boxMetal
+            top.normal.contents = boxNormal
         let bottom = SCNMaterial()
         bottom.diffuse.contents = color
             bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            bottom.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            bottom.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            bottom.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            bottom.roughness.contents = boxRoughness
+            bottom.metalness.contents = boxMetal
+            bottom.normal.contents = boxNormal
         let left = SCNMaterial()
         left.diffuse.contents = color
             left.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            left.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            left.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            left.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            left.roughness.contents = boxRoughness
+            left.metalness.contents = boxMetal
+            left.normal.contents = boxNormal
         let right = SCNMaterial()
         right.diffuse.contents = color
             right.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            right.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            right.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            right.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            right.roughness.contents = boxRoughness
+            right.metalness.contents = boxMetal
+            right.normal.contents = boxNormal
         let front = SCNMaterial()
         front.diffuse.contents = color
             front.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            front.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            front.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            front.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            front.roughness.contents = boxRoughness
+            front.metalness.contents = boxMetal
+            front.normal.contents = boxNormal
         let back = SCNMaterial()
         back.diffuse.contents = color
             back.lightingModel = SCNMaterial.LightingModel.physicallyBased
-            back.roughness.contents = UIImage(named: "scuffed-plastic-roughness")
-            back.metalness.contents = UIImage(named: "scuffed-plastic-metal")
-            back.normal.contents = UIImage(named: "scuffed-plastic-normal")
+            back.roughness.contents = boxRoughness
+            back.metalness.contents = boxMetal
+            back.normal.contents = boxNormal
             
-            
+            print(boxRoughness)
         boxGeometry.chamferRadius = 0
         boxGeometry.materials = [front, right, back, left, top, bottom]
         //boxGeometry.materials = [material]
         boxNode = SCNNode(geometry: boxGeometry)
         boxNode.name = "boxNode\(boxNodeNumber)"
-        eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color]), forKey: boxNodeNumber)
+            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
         print("added node \(boxNode.name)")
@@ -453,20 +476,32 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
         eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+        eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
+        eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
+        eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
         eachBoxSize[destinationBoxNumber]!.0.updateValue(boxWidthD, forKey: "x")
         eachBoxSize[destinationBoxNumber]!.0.updateValue(boxHightD, forKey: "y")
         eachBoxSize[destinationBoxNumber]!.0.updateValue(boxLengthD, forKey: "z")
         eachBoxSize[destinationBoxNumber]!.1.updateValue(boxColorD, forKey: "color")
+        eachBoxSize[destinationBoxNumber]!.2.updateValue(boxMetalD, forKey: "metal")
+        eachBoxSize[destinationBoxNumber]!.3.updateValue(boxRoughnessD, forKey: "roughness")
+        eachBoxSize[destinationBoxNumber]!.4.updateValue(boxNormalD, forKey: "normal")
     }
     func importAllCoordinates(){
         boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
         boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
         boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
         boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+        boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
+        boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
+        boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
         boxLengthD = eachBoxSize[destinationBoxNumber]!.0["z"]!
         boxHightD = eachBoxSize[destinationBoxNumber]!.0["y"]!
         boxWidthD = eachBoxSize[destinationBoxNumber]!.0["x"]!
         boxColorD = eachBoxSize[destinationBoxNumber]!.1["color"]!
+        boxMetalD = eachBoxSize[destinationBoxNumber]!.2["metal"]!
+        boxRoughnessD = eachBoxSize[destinationBoxNumber]!.3["roughness"]!
+        boxNormalD = eachBoxSize[destinationBoxNumber]!.4["normal"]!
     }
     func showHiglightOfDestinationFace(material: SCNMaterial){
         let highlight = CABasicAnimation(keyPath: "diffuse.contents")
