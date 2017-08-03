@@ -34,6 +34,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         case blackBox
         case brownBox
         case greyBox
+        
+        case bambooBox
+        case oakFloorBox
+        case rustyBox
+        case greesMetalBox
+        case streakMetal
+        case rustIronBox
+        case rockBox
+        case syntheticRubberBox
+        case plasticPatterBox
+        case mahagoniBox
+        
     }
     var overlay: SKScene!
     var planes = [OverlayPlane]()
@@ -63,6 +75,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var greyIcon = SKSpriteNode()
     var whiteIcon = SKSpriteNode()
     var brownIcon = SKSpriteNode()
+    var bambusIcon = SKSpriteNode()
+    var oakIcon = SKSpriteNode()
+    var rustyIcon = SKSpriteNode()
+    var rustIronIcon = SKSpriteNode()
+    var greasyIronIcon = SKSpriteNode()
+    var streakMetal = SKSpriteNode()
+    var rustedIronIcon = SKSpriteNode()
+    var roockBoxIcon = SKSpriteNode()
+    var rubberIcon = SKSpriteNode()
+    var plasticIcon = SKSpriteNode()
+    var mahagoni = SKSpriteNode()
     //
     var chooseBlock = false
     var boxNode = SCNNode()
@@ -110,10 +133,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         let scene = SCNScene()
         // Set the scene to the view
         sceneView.scene = scene
-        //sceneView.autoenablesDefaultLighting = true
-let env = UIImage(named: "spherical")
-sceneView.scene.lightingEnvironment.contents = env
-sceneView.scene.lightingEnvironment.intensity = 2.0
+        
+       // sceneView.autoenablesDefaultLighting = false
+        let env = UIImage(named: "spherical")
+        sceneView.scene.lightingEnvironment.contents = env
+        sceneView.scene.lightingEnvironment.intensity = 2.0
+  
         
         overlay = SKScene(size:CGSize(width:375,height:750))
         overlay.scaleMode = .aspectFill
@@ -131,14 +156,17 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
-        spotLight.type = .ambient
-//        spotLight.spotInnerAngle = 45
-//        spotLight.spotOuterAngle = 45
-        spotLight.castsShadow = true
+        spotLight.type = .omni
+        spotLight.spotInnerAngle = 45
+        spotLight.spotOuterAngle = 45
+        spotLight.shadowColor = UIColor.gray
+        spotLight.automaticallyAdjustsShadowProjection = true
+        
         let spotNode = SCNNode()
         spotNode.name = "SpotNode"
         spotNode.light = spotLight
         spotNode.position = position
+        spotNode.light?.orthographicScale = 50
         
         spotNode.eulerAngles = SCNVector3(-Double.pi/2.0,0,-0.2)
         self.sceneView.scene.rootNode.addChildNode(spotNode)
@@ -349,10 +377,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
     }
     
     @objc func moving(recognizer: UIPanGestureRecognizer){
-        //positioning and moving node
-        // selected = false
-        //inProgress = false
-        //boxNode.opacity = 1.0
+       
         let sceneView = recognizer.view as! ARSCNView
         let point = recognizer.location(in: sceneView)
         let result = sceneView.hitTest(point, types: .existingPlaneUsingExtent)
@@ -365,7 +390,6 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             if let hitObject = hitList.first{
                 let node = hitObject.node
                 for boxNodeNumber in boxNodeNumbers{
-                    //Workssss
                     if node.name == "boxNode\(boxNodeNumber)"{
                         print("touched on \(boxNodeNumber)")
                         node.position.x = hitResult.worldTransform.columns.3.x
@@ -378,12 +402,12 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             }
         }
     }
+    
     @objc func longTouch(recognizer: UILongPressGestureRecognizer){
-//        print("longpress")
-//        if recognizer.state == .began{
-//           // selected = true
-//            //boxNode.opacity = 0.5
-//        }
+//
+//        movingStatus = .chooseToMoveAround
+//        currentMovingNode.opacity = 0.5
+//        print("on long touch")
     }
     enum PanelOpened{
         case panelOpened
@@ -409,28 +433,49 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
                 
                 //pick the chosen color, add cube to scene in that color
                 if chosenStatus == .redBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "blockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "blockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .blueBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "blueBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "blueBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .orangeBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "orangeBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "orangeBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .yellowBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "yellowBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "yellowBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .greenBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "greenBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "greenBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .PurpleBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "purpleBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "purpleBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .pinkBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "pinkBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "pinkBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .blackBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "blackBockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "blackBockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .greyBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "greyBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "greyBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .brownBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "brownBlockIcon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "brownBlockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .whiteBox{
-                    addBox(hitResult: hitResult, color: UIImage(named: "whiteBlockicon")!)
+                    addBox(hitResult: hitResult, color: UIImage(named: "whiteBlockicon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
+                }else if chosenStatus == .bambooBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "bamboo-wood-semigloss-albedo")!, metal: UIImage(named: "bamboo-wood-semigloss-metal")!, roughness: UIImage(named: "bamboo-wood-semigloss-roughness")!, normal: UIImage(named: "bamboo-wood-semigloss-normal")!)
+                }else if chosenStatus == .oakFloorBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "oakfloor2-albedo")!, metal: UIImage(named: "bamboo-wood-semigloss-metal")!, roughness: UIImage(named: "oakfloor2-roughness")!, normal: UIImage(named: "oakfloor2-normal")!)
+                }else if chosenStatus == .rustyBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "rustediron-streaks-albedo")!, metal: UIImage(named: "rustediron-streaks-metal")!, roughness: UIImage(named: "rustediron-streaks-roughness")!, normal: UIImage(named: "rustediron-streaks-normal")!)
+                }else if chosenStatus == .greesMetalBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "greasy-metal-pan1-albedo")!, metal: UIImage(named: "greasy-metal-pan1-metal")!, roughness: UIImage(named: "greasy-metal-pan1-roughness")!, normal: UIImage(named: "greasy-metal-pan1-normal")!)
+                }else if chosenStatus == .streakMetal{
+                    addBox(hitResult: hitResult, color: UIImage(named: "streakedmetal-albedo")!, metal: UIImage(named: "streakedmetal-metalness")!, roughness: UIImage(named: "streakedmetal-roughness")!, normal: UIImage(named: "rustediron2_normal")!)
+                }else if chosenStatus == .rustIronBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "rustediron2_basecolor")!, metal: UIImage(named: "rustediron2_metallic")!, roughness: UIImage(named: "rustediron2_roughness")!, normal: UIImage(named: "rustediron2_normal")!)
+                }else if chosenStatus == .rockBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "holey-rock1-albedo")!, metal: UIImage(named: "holey-rock1-metalness")!, roughness: UIImage(named: "holey-rock1-roughness")!, normal: UIImage(named: "holey-rock1-normal-ue")!)
+                }else if chosenStatus == .syntheticRubberBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "synth-rubber-albedo")!, metal: UIImage(named: "synth-rubber-metalness")!, roughness: UIImage(named: "synth-rubber-roughness")!, normal: UIImage(named: "synth-rubber-normal")!)
+                }else if chosenStatus == .plasticPatterBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "plasticpattern1-albedo")!, metal: UIImage(named: "plasticpattern1-metalness")!, roughness: UIImage(named: "plasticpattern1-roughness2")!, normal: UIImage(named: "plasticpattern1-normal2b")!)
+                }else if chosenStatus == .mahagoniBox{
+                    addBox(hitResult: hitResult, color: UIImage(named: "mahogfloor_basecolor")!, metal: UIImage(named: "mahogfloor_AO")!, roughness: UIImage(named: "mahogfloor_roughness")!, normal: UIImage(named: "mahogfloor_normal")!)
                 }
+               
             }else if hitTestResult.isEmpty{
                 print("touchlocation is empty")
             }
@@ -439,6 +484,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
   
     @IBAction func switching(_ sender: UISwitch) {
         let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
+        configuration.isLightEstimationEnabled = true
         configuration.planeDetection = []
         self.sceneView.session.run(configuration, options: [])
         
@@ -460,18 +506,8 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         
         
     }
-//    @IBAction func `switch`(_ sender: Any) {
-//
-//        let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
-//        configuration.planeDetection = []
-//        self.sceneView.session.run(configuration, options: [])
-//        //turn off the grid
-//        for plane in self.planes{
-//            plane.planeGeometry.materials.forEach({ (material) in
-//                material.diffuse.contents = UIColor.clear
-//            })
-//        }
-//    }
+
+
     
     @IBAction func takeScreenshot(_ sender: Any) {
         print("screenshot")
@@ -488,7 +524,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         
     }
     var addingNewCube = Bool()
-    private func addBox(hitResult :ARHitTestResult, color: UIImage) {
+    private func addBox(hitResult :ARHitTestResult, color: UIImage, metal: UIImage, roughness: UIImage, normal: UIImage) {
         //disactivate selected and scaleable
         scaleAble = false
         selected = false
@@ -503,9 +539,9 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         boxWidth = 0.2
         boxHight = 0.2
         boxLength = 0.2
-            boxMetal = UIImage(named: "scuffed-plastic-metal")!
-            boxRoughness = UIImage(named: "scuffed-plastic-roughness")!
-            boxNormal = UIImage(named: "scuffed-plastic-metal")!
+            boxMetal = metal
+            boxRoughness = roughness
+            boxNormal = normal
         boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
         let material = SCNMaterial()
         material.diffuse.contents = color
@@ -518,6 +554,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         let bottom = SCNMaterial()
         bottom.diffuse.contents = color
             bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
+
             bottom.roughness.contents = boxRoughness
             bottom.metalness.contents = boxMetal
             bottom.normal.contents = boxNormal
@@ -551,6 +588,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         boxGeometry.materials = [front, right, back, left, top, bottom]
         //boxGeometry.materials = [material]
         boxNode = SCNNode(geometry: boxGeometry)
+            boxNode.castsShadow = true
         boxNode.name = "boxNode\(boxNodeNumber)"
             eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
@@ -583,14 +621,15 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         chooseBlock = boolien
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
-//        let estimate = self.sceneView.session.currentFrame?.lightEstimate
-//        if estimate == nil{
-//            return
-//        }
-//        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
-//        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
-//        
+        let estimate = self.sceneView.session.currentFrame?.lightEstimate
+        if estimate == nil{
+            return
+        }
+        let intensity = (estimate?.ambientIntensity)! / 1000
+        let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
+        spotNode?.light?.intensity = intensity
+
+
     }
     func updateAllCordinates(){
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
@@ -625,12 +664,16 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         boxNormalD = eachBoxSize[destinationBoxNumber]!.4["normal"]!
     }
     func showHiglightOfDestinationFace(material: SCNMaterial){
-        let highlight = CABasicAnimation(keyPath: "diffuse.contents")
-        highlight.toValue = UIColor.black
+        let highlight = CABasicAnimation(keyPath: "opacity")
+        highlight.fromValue = 0.0
+        highlight.toValue = 1.0
         highlight.duration = 1.0
-        highlight.autoreverses = true
-        highlight.isRemovedOnCompletion = true
+        //highlight.autoreverses = true
+        //highlight.isRemovedOnCompletion = true
+        
+      
         material.addAnimation(highlight, forKey: nil)
+
     }
     
     var isMoving = Bool()
@@ -639,6 +682,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         case currentMovingChosen
         case currentMovingNotChosen
         case chooseNewMovingNode
+        case chooseToMoveAround
     }
     
     var movingStatus = SelectionType.currentMovingNotChosen
@@ -701,6 +745,7 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
                                 let material = destinationNode.geometry?.materials[hitObject.geometryIndex]
                                self.importAllCoordinates()
                                 if hitObject.geometryIndex == 0{
+                                
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(self.self.boxLengthD)/2) +  (Float(self.boxLength)/2)), duration: 0.5)
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
@@ -733,11 +778,14 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
                                 }
                                 self.currentMovingNode.opacity = 1
                                 self.showHiglightOfDestinationFace(material: material!)
+                            
                                 
                                 group.leave()
+                          
                             }
                             group.notify(queue: .main){
                                 self.movingStatus = .currentMovingNotChosen
+                                
                                 print("left status currentmoving chosen")
                                 }
                             }
@@ -759,6 +807,19 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
                         }
                     }
                 }
+//                else if movingStatus == .chooseToMoveAround{
+//                    for currentBoxNumber in boxNodeNumbers{
+//                        let node  = hitObject.node
+//                        if node.name == "boxNode\(boxNodeNumber)"{
+//                            currentMovingNode = node
+//                            currentMovingNode.opacity = 0.5
+//                            isMoving = true
+//                            selected = true
+//                            tapGestureRecognizer.isEnabled = false
+//                            print(movingStatus)
+//                        }
+//                    }
+//                }
             }
         }
         
@@ -835,16 +896,109 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
+        if(touchedNode.name == "bambusBoxIcon"){
+            chosenStatus = NodeType.bambooBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "oakBoxIcon"){
+            chosenStatus = NodeType.oakFloorBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "rustyBoxIcon"){
+            chosenStatus = NodeType.rustyBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        //
+        if(touchedNode.name == "rustIronBoxIcon"){
+            chosenStatus = NodeType.rustyBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "greasyIronBoxIcon"){
+            chosenStatus = NodeType.greesMetalBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "streakIcon"){
+            chosenStatus = NodeType.streakMetal
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "rustedIcon"){
+            chosenStatus = NodeType.rustIronBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "rockIcon"){
+            chosenStatus = NodeType.rockBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "rubberBoxIcon"){
+            chosenStatus = NodeType.syntheticRubberBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "plasticIronBoxIcon"){
+            chosenStatus = NodeType.plasticPatterBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "mahagoniIronBoxIcon"){
+            chosenStatus = NodeType.mahagoniBox
+            addingState = .addAble
+            tapGestureRecognizer.isEnabled = false
+            closePanel()
+        }
+        if(touchedNode.name == "left"){
+           print("left")
+            currentMovingNode.position.x -= 0.01
+        }
+        if(touchedNode.name == "right"){
+            print("right")
+            currentMovingNode.position.x += 0.01
+        }
+        if(touchedNode.name == "up"){
+            print("up")
+            currentMovingNode.position.y += 0.01
+        }
+        if(touchedNode.name == "down"){
+            print("down")
+            currentMovingNode.position.y -= 0.01
+        }
+        if(touchedNode.name == "out"){
+            print("out")
+            currentMovingNode.position.z += 0.01
+        }
+        if(touchedNode.name == "in"){
+            print("in")
+            currentMovingNode.position.z -= 0.01
+        }
     }
-    
+   
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
+     
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         //allow to touch again
         tapGestureRecognizer.isEnabled = true
+   
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -880,6 +1034,34 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         // Pause the view's session
         sceneView.session.pause()
     }
+
+    
+    @IBAction func upAction(_ sender: Any) {
+         currentMovingNode.position.y += 0.01
+    }
+    @IBAction func rightAction(_ sender: Any) {
+        currentMovingNode.position.x += 0.01
+    }
+    @IBAction func downAction(_ sender: Any) {
+        currentMovingNode.position.y -= 0.01
+    }
+    @IBAction func leftAction(_ sender: Any) {
+        currentMovingNode.position.x -= 0.01
+    }
+    @IBAction func outAction(_ sender: Any) {
+        currentMovingNode.position.z += 0.01
+    }
+    @IBAction func inAction(_ sender: Any) {
+        currentMovingNode.position.z -= 0.01
+    }
+    @IBOutlet var upBtn: UIButton!
+    @IBOutlet var rightBtn: UIButton!
+    @IBOutlet var downBtn: UIButton!
+    @IBOutlet var leftBtn: UIButton!
+    @IBOutlet var inBtn: UIButton!
+    @IBOutlet var outBtn: UIButton!
+    
+    
     func createPanel(){
         panel = SKSpriteNode(imageNamed: "panel")
         panel.position = CGPoint(x: 0, y: -(view.frame.height / 1.5))
@@ -963,6 +1145,72 @@ sceneView.scene.lightingEnvironment.intensity = 2.0
         whiteIcon.zPosition = 100
         whiteIcon.position = CGPoint(x: -100, y: 0)
         panel.addChild(whiteIcon)
+        bambusIcon = SKSpriteNode(imageNamed: "bamboo-wood-semigloss-albedo")
+        bambusIcon.name = "bambusBoxIcon"
+        bambusIcon.size = CGSize(width: 40, height: 40)
+        bambusIcon.zPosition = 100
+        bambusIcon.position = CGPoint(x: -50, y: 0)
+        panel.addChild(bambusIcon)
+        oakIcon = SKSpriteNode(imageNamed: "oakfloor2-albedo")
+        oakIcon.name = "oakBoxIcon"
+        oakIcon.size = CGSize(width: 40, height: 40)
+        oakIcon.zPosition = 100
+        oakIcon.position = CGPoint(x: 0, y: 0)
+        panel.addChild(oakIcon)
+        mahagoni = SKSpriteNode(imageNamed: "mahogfloor_basecolor")
+        mahagoni.name = "mahagoniIronBoxIcon"
+        mahagoni.size = CGSize(width: 40, height: 40)
+        mahagoni.zPosition = 100
+        mahagoni.position = CGPoint(x: +50, y: 0)
+        panel.addChild(mahagoni)
+        rustIronIcon = SKSpriteNode(imageNamed: "metal3")
+        rustIronIcon.name = "rustIronBoxIcon"
+        rustIronIcon.size = CGSize(width: 40, height: 40)
+        rustIronIcon.zPosition = 100
+        rustIronIcon.position = CGPoint(x: +100, y: 0)
+        panel.addChild(rustIronIcon)
+        greasyIronIcon = SKSpriteNode(imageNamed: "greasy-metal-pan1-albedo")
+        greasyIronIcon.name = "greasyIronBoxIcon"
+        greasyIronIcon.size = CGSize(width: 40, height: 40)
+        greasyIronIcon.zPosition = 100
+        greasyIronIcon.position = CGPoint(x: -100, y: -50)
+        panel.addChild(greasyIronIcon)
+        streakMetal = SKSpriteNode(imageNamed: "metal1")
+        streakMetal.name = "streakIcon"
+        streakMetal.size = CGSize(width: 40, height: 40)
+        streakMetal.zPosition = 100
+        streakMetal.position = CGPoint(x: -50, y: -50)
+        panel.addChild(streakMetal)
+        rustedIronIcon = SKSpriteNode(imageNamed: "metal2")
+        rustedIronIcon.name = "rustedIcon"
+        rustedIronIcon.size = CGSize(width: 40, height: 40)
+        rustedIronIcon.zPosition = 100
+        rustedIronIcon.position = CGPoint(x: 0, y: -50)
+        panel.addChild(rustedIronIcon)
+        roockBoxIcon = SKSpriteNode(imageNamed: "holey-rock1-albedo")
+        roockBoxIcon.name = "rockIcon"
+        roockBoxIcon.size = CGSize(width: 40, height: 40)
+        roockBoxIcon.zPosition = 100
+        roockBoxIcon.position = CGPoint(x: +50, y: -50)
+        panel.addChild(roockBoxIcon)
+        rubberIcon = SKSpriteNode(imageNamed: "synth-rubber-albedo")
+        rubberIcon.name = "rubberBoxIcon"
+        rubberIcon.size = CGSize(width: 40, height: 40)
+        rubberIcon.zPosition = 100
+        rubberIcon.position = CGPoint(x: +100, y: -50)
+        panel.addChild(rubberIcon)
+        plasticIcon = SKSpriteNode(imageNamed: "RubberImage")
+        plasticIcon.name = "plasticIronBoxIcon"
+        plasticIcon.size = CGSize(width: 40, height: 40)
+        plasticIcon.zPosition = 100
+        plasticIcon.position = CGPoint(x: -100, y: -100)
+        panel.addChild(plasticIcon)
+        
+        
+
+        
+
+        
     }
     
 }
