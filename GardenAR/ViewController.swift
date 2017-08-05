@@ -11,6 +11,7 @@ import SceneKit
 import SpriteKit
 import ARKit
 import QuartzCore
+import MetalKit
 
 
 class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
@@ -21,6 +22,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var minusBtn: UIButton!
     @IBOutlet weak var trashBtn: UIButton!
+    
+    //import metal
+    var metalView: MTKView {
+        return view as! MTKView
+    }
+    var renderer: Renderer?
     
     enum NodeType{
         case redBox
@@ -59,6 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var panel = SKSpriteNode()
     var boxNodeNumber = 0
     var boxNodeNumbers = [Int]()
+    var shadows = [SCNNode]()
     var currentBoxNumber = Int()
     var destinationBoxNumber = Int()
     var plusScale = SKSpriteNode()
@@ -122,10 +130,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set the view's delegate
-
-        sceneView.delegate = self
+//        //set metal
+//        metalView.device = MTLCreateSystemDefaultDevice()
+//        guard let device = metalView.device else{
+//            fatalError()
+//        }
+//        metalView.clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 1)
+//
+//        renderer = Renderer(device: device)
+//        metalView.delegate = renderer
+//
+//
         
+        // Set the view's delegate
+        sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints,ARSCNDebugOptions.showWorldOrigin]
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
@@ -152,21 +170,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
      
-        //insertSpotLight(position: SCNVector3(0,1.0,1.0))
+        insertSpotLight(position: SCNVector3(0,1.0,1.0))
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
-        spotLight.type = .omni
+        spotLight.type = .directional
         spotLight.spotInnerAngle = 45
         spotLight.spotOuterAngle = 45
-        spotLight.shadowColor = UIColor.gray
-        spotLight.automaticallyAdjustsShadowProjection = true
+        spotLight.castsShadow = true
+        spotLight.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+        spotLight.shadowMode = .deferred
+    
+
+        //spotLight.shadowColor = UIColor.black
+        //spotLight.automaticallyAdjustsShadowProjection = true
         
         let spotNode = SCNNode()
         spotNode.name = "SpotNode"
         spotNode.light = spotLight
         spotNode.position = position
-        spotNode.light?.orthographicScale = 50
+        
+        //spotNode.light?.orthographicScale = 100
         
         spotNode.eulerAngles = SCNVector3(-Double.pi/2.0,0,-0.2)
         self.sceneView.scene.rootNode.addChildNode(spotNode)
@@ -189,6 +213,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
    
     @IBAction func scaleUp(_ sender: Any) {
         print("scaleable up is \(scaleAble)")
+        plusBtn.alpha = 1
+        minusBtn.alpha = 1
+        upBtn.alpha = 1
+        downBtn.alpha = 1
+        leftBtn.alpha = 1
+        rightBtn.alpha = 1
+        in1Btn.alpha = 1
+        out1Btn.alpha = 1
+        self.minusBtn.alpha = 1
+        self.plusBtn.alpha = 1
+        confirmOn.alpha = 0
+        confirmOff.alpha = 1
         if scaleAble{
             print("can scale u = \(scaleAble)")
             // check eachBoxSize is not nil
@@ -221,6 +257,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
             boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
             boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
+            
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height:  boxHight, length: boxLength, chamferRadius: 0)
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
@@ -230,6 +267,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
             eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
             eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
+            
             print("eachboxSize  after scale is \(eachBoxSize)")
             currentNode.geometry = geo
             let top = SCNMaterial()
@@ -274,11 +312,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             print(boxGeometry.height)
             print(boxGeometry.length)
             print(currentNode.name)
-            print("added node \(eachBoxSize)")
+            //print("added node \(eachBoxSize)")
         }
     }
     
     @IBAction func scaleDown(_ sender: Any) {
+        plusBtn.alpha = 1
+        minusBtn.alpha = 1
+        upBtn.alpha = 1
+        downBtn.alpha = 1
+        leftBtn.alpha = 1
+        rightBtn.alpha = 1
+        in1Btn.alpha = 1
+        out1Btn.alpha = 1
+        self.minusBtn.alpha = 1
+        self.plusBtn.alpha = 1
+        confirmOn.alpha = 0
+        confirmOff.alpha = 1
+        
         print("scaleable down is \(scaleAble)")
         if scaleAble{
             print("can scale down = \(scaleAble)")
@@ -404,10 +455,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     @objc func longTouch(recognizer: UILongPressGestureRecognizer){
-//
-//        movingStatus = .chooseToMoveAround
-//        currentMovingNode.opacity = 0.5
-//        print("on long touch")
+
     }
     enum PanelOpened{
         case panelOpened
@@ -417,6 +465,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         case addAble
         case notAddAble
     }
+    
     var panelState = PanelOpened.panelClosed
     var addingState = AddObject.addAble
     @objc func tapped(recognizer :UIGestureRecognizer) {
@@ -491,13 +540,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         if sender.isOn == true{
             for plane in self.planes{
                 plane.planeGeometry.materials.forEach({ (material) in
-                    material.diffuse.contents = UIImage(named:"overlay_grid.png")
+                    material.diffuse.contents = UIColor.white
+                    material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
                 })
             }
         }else{
             for plane in self.planes{
                 plane.planeGeometry.materials.forEach({ (material) in
-                    material.diffuse.contents = UIColor.clear
+                    material.diffuse.contents = UIImage(named:"transparentOverlay")
                 })
             }
         }
@@ -513,16 +563,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         print("screenshot")
     }
     @IBAction func addObjects(_ sender: Any) {
-        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.upBtn.alpha = 0
+            self.downBtn.alpha = 0
+            self.leftBtn.alpha = 0
+            self.rightBtn.alpha = 0
+            self.in1Btn.alpha = 0
+            self.out1Btn.alpha = 0
+            self.minusBtn.alpha = 0
+            self.plusBtn.alpha = 0
+            self.confirmOn.alpha = 0
+            self.confirmOff.alpha = 0
+        }) { (finished) in
+        }
         if openedPanel == true{
-           
             closePanel()
         }else if openedPanel == false{
-            
             openPanel()
-        }
-        
+        }   
     }
+    var shadowYposition = Float()
     var addingNewCube = Bool()
     private func addBox(hitResult :ARHitTestResult, color: UIImage, metal: UIImage, roughness: UIImage, normal: UIImage) {
         //disactivate selected and scaleable
@@ -588,12 +648,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         boxGeometry.materials = [front, right, back, left, top, bottom]
         //boxGeometry.materials = [material]
         boxNode = SCNNode(geometry: boxGeometry)
-            boxNode.castsShadow = true
+            //boxNode.castsShadow = true
+
+            //boxNode.light?.orthographicScale = 50
+            
         boxNode.name = "boxNode\(boxNodeNumber)"
             eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
         print("added node \(eachBoxSize)")
+//            let shadowGeometry = SCNBox(width: 0.2, height: 0.01, length: 0.3, chamferRadius: 0)
+//            let shadowMaterial = SCNMaterial()
+//            shadowMaterial.diffuse.contents = UIImage(named: "cubeShadow")
+//            shadowGeometry.materials = [shadowMaterial]
+//            let shadowNode = SCNNode(geometry: shadowGeometry)
+//            shadowNode.name = "shadow\(boxNodeNumber)"
+//            shadowYposition = boxNode.position.y - Float(boxHight / 2)
+//            //shadowNode.position = SCNVector3(0,-0.1,-0.05)
+//            shadowNode.position = SCNVector3(boxNode.position.x, boxNode.position.y - Float(boxGeometry.height/2), boxNode.position.z)
+//            //shadowNode.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2.0), 1.0, 0.0, 0.0);
+//            sceneView.scene.rootNode.addChildNode(shadowNode)
+//            shadows.append(shadowNode)
+//            //boxNode.addChildNode(shadowNode)
+
+            
+            
+            
             
         }
     }
@@ -628,10 +708,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         let intensity = (estimate?.ambientIntensity)! / 1000
         let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
         spotNode?.light?.intensity = intensity
-
+        //spotNode?.light?.intensity = (estimate?.ambientIntensity)!
 
     }
     func updateAllCordinates(){
+//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxWidth, forKey: "x")
+//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxHight, forKey: "y")
+//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxLength, forKey: "z")
+//        eachBoxSize[copyBoxNmber]!.1.updateValue(boxColor, forKey: "color")
+//        eachBoxSize[copyBoxNmber]!.2.updateValue(boxMetal, forKey: "metal")
+//        eachBoxSize[copyBoxNmber]!.3.updateValue(boxRoughness, forKey: "roughness")
+//        eachBoxSize[copyBoxNmber]!.4.updateValue(boxNormal, forKey: "normal")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
@@ -648,6 +735,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         eachBoxSize[destinationBoxNumber]!.4.updateValue(boxNormalD, forKey: "normal")
     }
     func importAllCoordinates(){
+//        boxLength = eachBoxSize[copyBoxNmber]!.0["z"]!
+//        boxHight = eachBoxSize[copyBoxNmber]!.0["y"]!
+//        boxWidth = eachBoxSize[copyBoxNmber]!.0["x"]!
+//        boxColor = eachBoxSize[copyBoxNmber]!.1["color"]!
+//        boxMetal = eachBoxSize[copyBoxNmber]!.2["metal"]!
+//        boxRoughness = eachBoxSize[copyBoxNmber]!.3["roughness"]!
+        //boxNormal = eachBoxSize[copyBoxNmber]!.4["normal"]!
         boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
         boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
         boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
@@ -668,21 +762,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         highlight.fromValue = 0.0
         highlight.toValue = 1.0
         highlight.duration = 1.0
-        //highlight.autoreverses = true
-        //highlight.isRemovedOnCompletion = true
-        
-      
+        highlight.autoreverses = true
+        highlight.isRemovedOnCompletion = true
         material.addAnimation(highlight, forKey: nil)
 
     }
     
     var isMoving = Bool()
-    
+    var copyNode = SCNNode()
+    var copyBoxNmber = Int()
     enum SelectionType{
         case currentMovingChosen
         case currentMovingNotChosen
         case chooseNewMovingNode
-        case chooseToMoveAround
+        case chooseToCopy
+        case pasteCopy
     }
     
     var movingStatus = SelectionType.currentMovingNotChosen
@@ -709,7 +803,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 //
                                 self.addingState = .notAddAble
                                 self.scaleAble = true
-                                self.currentMovingNode.opacity = 0.5
+                                self.currentMovingNode.opacity = 0.7
+                                print("selected boxwidth is \(self.boxGeometry.width)")
+                                UIView.animate(withDuration: 0.3, animations: {
+                                    self.upBtn.alpha = 0.5
+                                    self.downBtn.alpha = 0.5
+                                    self.leftBtn.alpha = 0.5
+                                    self.rightBtn.alpha = 0.5
+                                    self.in1Btn.alpha = 0.5
+                                    self.out1Btn.alpha = 0.5
+                                    self.minusBtn.alpha = 0.5
+                                    self.plusBtn.alpha = 0.5
+                                    self.confirmOn.alpha = 0
+                                    self.confirmOff.alpha = 0.5
+                                }) { (finished) in
+                                }
                                 group.leave()
                             }
                             group.notify(queue: .main){
@@ -733,6 +841,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                         if destinationNode.position.x == currentMovingNode.position.x && destinationNode.position.y == currentMovingNode.position.y && destinationNode.position.z == currentMovingNode.position.z{
                             movingStatus = .currentMovingNotChosen
                             currentMovingNode.opacity = 1
+                            UIView.animate(withDuration: 0.3, animations: {
+                                self.upBtn.alpha = 0
+                                self.downBtn.alpha = 0
+                                self.leftBtn.alpha = 0
+                                self.rightBtn.alpha = 0
+                                self.in1Btn.alpha = 0
+                                self.out1Btn.alpha = 0
+                                self.minusBtn.alpha = 0
+                                self.plusBtn.alpha = 0
+                                self.confirmOn.alpha = 0
+                                self.confirmOff.alpha = 0
+                            }) { (finished) in
+                            }
                             print("run.......")
                         }else{
                             print("run3")
@@ -749,6 +870,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(self.self.boxLengthD)/2) +  (Float(self.boxLength)/2)), duration: 0.5)
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
+                                   // currentMovingNode.childNode(withName: "shadow\(currentBoxNumber)", recursively: true)?.position.y += 0.01
+                                    
                                     print("front")
                                 }else if hitObject.geometryIndex == 1{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x + Float(self.boxWidthD)/2) + (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
@@ -779,6 +902,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 self.currentMovingNode.opacity = 1
                                 self.showHiglightOfDestinationFace(material: material!)
                             
+                                UIView.animate(withDuration: 0.3, animations: {
+                                    self.upBtn.alpha = 0
+                                    self.downBtn.alpha = 0
+                                    self.leftBtn.alpha = 0
+                                    self.rightBtn.alpha = 0
+                                    self.in1Btn.alpha = 0
+                                    self.out1Btn.alpha = 0
+                                    self.minusBtn.alpha = 0
+                                    self.plusBtn.alpha = 0
+                                    self.confirmOn.alpha = 0
+                                    self.confirmOff.alpha = 0
+                                }) { (finished) in
+                                }
                                 
                                 group.leave()
                           
@@ -798,28 +934,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                         let node = hitObject.node
                         if node.name == "boxNode\(boxNodeNumber)"{
                             currentMovingNode = node
-                            currentMovingNode.opacity = 0.5
+                            currentMovingNode.opacity = 0.7
                             isMoving = true
                             selected = true
                             movingStatus = .currentMovingChosen
                             print("should have changed  the currentNode")
                             tapGestureRecognizer.isEnabled = false
+                            //fade in coordinate buttons
+                            
+                            UIView.animate(withDuration: 0.3, animations: {
+                                self.upBtn.alpha = 0.5
+                                self.downBtn.alpha = 0.5
+                                self.leftBtn.alpha = 0.5
+                                self.rightBtn.alpha = 0.5
+                                self.in1Btn.alpha = 0.5
+                                self.out1Btn.alpha = 0.5
+                                self.minusBtn.alpha = 0.5
+                                self.plusBtn.alpha = 0.5
+                                self.confirmOn.alpha = 0
+                                self.confirmOff.alpha = 0.5
+                            }) { (finished) in
+                            }
+
+                        }
+                    }
+                }else if movingStatus == .chooseToCopy{
+                    for boxNodeNumber in boxNodeNumbers{
+                        let node = hitObject.node
+                        if node.name == "boxNode\(boxNodeNumber)"{
+                            copyNode = node
+                            copyBoxNmber = boxNodeNumber
+                            copyNode.opacity = 0.5
+                            tapGestureRecognizer.isEnabled = false
+                            print("chose a node to copy")
+                            print("moving status is\(movingStatus)")
+                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxWidth, forKey: "x")
+                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxHight, forKey: "y")
+                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxLength, forKey: "z")
+                            eachBoxSize[copyBoxNmber]!.1.updateValue(boxColor, forKey: "color")
+                            eachBoxSize[copyBoxNmber]!.2.updateValue(boxMetal, forKey: "metal")
+                            eachBoxSize[copyBoxNmber]!.3.updateValue(boxRoughness, forKey: "roughness")
+                            eachBoxSize[copyBoxNmber]!.4.updateValue(boxNormal, forKey: "normal")
+                            
                         }
                     }
                 }
-//                else if movingStatus == .chooseToMoveAround{
-//                    for currentBoxNumber in boxNodeNumbers{
-//                        let node  = hitObject.node
-//                        if node.name == "boxNode\(boxNodeNumber)"{
-//                            currentMovingNode = node
-//                            currentMovingNode.opacity = 0.5
-//                            isMoving = true
-//                            selected = true
-//                            tapGestureRecognizer.isEnabled = false
-//                            print(movingStatus)
-//                        }
-//                    }
-//                }
             }
         }
         
@@ -963,30 +1122,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             tapGestureRecognizer.isEnabled = false
             closePanel()
         }
-        if(touchedNode.name == "left"){
-           print("left")
-            currentMovingNode.position.x -= 0.01
-        }
-        if(touchedNode.name == "right"){
-            print("right")
-            currentMovingNode.position.x += 0.01
-        }
-        if(touchedNode.name == "up"){
-            print("up")
-            currentMovingNode.position.y += 0.01
-        }
-        if(touchedNode.name == "down"){
-            print("down")
-            currentMovingNode.position.y -= 0.01
-        }
-        if(touchedNode.name == "out"){
-            print("out")
-            currentMovingNode.position.z += 0.01
-        }
-        if(touchedNode.name == "in"){
-            print("in")
-            currentMovingNode.position.z -= 0.01
-        }
+   
     }
    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -1035,31 +1171,204 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         sceneView.session.pause()
     }
 
-    
+   
     @IBAction func upAction(_ sender: Any) {
-         currentMovingNode.position.y += 0.01
+        if movingStatus == .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.y += 0.01
+           
+        }
+       
     }
     @IBAction func rightAction(_ sender: Any) {
-        currentMovingNode.position.x += 0.01
+        if movingStatus == .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.x += 0.01
+        }
     }
     @IBAction func downAction(_ sender: Any) {
-        currentMovingNode.position.y -= 0.01
+        if movingStatus == .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.y -= 0.01
+            
+        }
     }
     @IBAction func leftAction(_ sender: Any) {
-        currentMovingNode.position.x -= 0.01
+        if movingStatus == .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.x -= 0.01
+        }
     }
     @IBAction func outAction(_ sender: Any) {
-        currentMovingNode.position.z += 0.01
+        if movingStatus == .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.z -= 0.01
+         print("out")
+        }
     }
     @IBAction func inAction(_ sender: Any) {
-        currentMovingNode.position.z -= 0.01
+        if movingStatus ==  .currentMovingChosen{
+            upBtn.alpha = 1
+            downBtn.alpha = 1
+            leftBtn.alpha = 1
+            rightBtn.alpha = 1
+            in1Btn.alpha = 1
+            out1Btn.alpha = 1
+            self.minusBtn.alpha = 1
+            self.plusBtn.alpha = 1
+            confirmOn.alpha = 0
+            confirmOff.alpha = 1
+            currentMovingNode.position.z += 0.01
+            print("in")
+        }
+    }
+
+    @IBAction func confirmAction(_ sender: Any) {
+        confirmOff.alpha = 0
+        confirmOn.alpha = 1
+        currentMovingNode.opacity = 1
+        movingStatus = .currentMovingNotChosen
+        UIView.animate(withDuration: 0.5, animations: {
+            self.upBtn.alpha = 0.0
+            self.downBtn.alpha = 0.0
+            self.leftBtn.alpha = 0.0
+            self.rightBtn.alpha = 0.0
+            self.in1Btn.alpha = 0.0
+            self.out1Btn.alpha = 0.0
+            self.minusBtn.alpha = 0.0
+            self.plusBtn.alpha = 0.0
+        }) { (finished) in
+        }
+        UIView.animate(withDuration: 0.7, animations: {
+            self.confirmOn.alpha = 0.0
+            self.createConfirmText()
+        }) { (finished) in
+        }
+        
+    }
+    @IBAction func copyAction(_ sender: Any) {
+        movingStatus = .chooseToCopy
+        UIView.animate(withDuration: 0.2, animations: {
+            self.copyConfirmOn.alpha = 0
+            self.copyConfirmOff.alpha = 1
+        }) { (finished) in
+        }
+        createCopyText()
+    }
+    var dublicatedNode = SCNNode()
+    @IBAction func copyConfirmAction(_ sender: Any) {
+        print("pressed button to confirm paste")
+        //dublicates all chosen nodes
+        //movingStatus = .pasteCopy
+        boxLength = eachBoxSize[copyBoxNmber]!.0["z"]!
+        boxHight = eachBoxSize[copyBoxNmber]!.0["y"]!
+        boxWidth = eachBoxSize[copyBoxNmber]!.0["x"]!
+        boxColor = eachBoxSize[copyBoxNmber]!.1["color"]!
+        boxMetal = eachBoxSize[copyBoxNmber]!.2["metal"]!
+        boxRoughness = eachBoxSize[copyBoxNmber]!.3["roughness"]!
+        boxNormal = eachBoxSize[copyBoxNmber]!.4["normal"]!
+        copyNode.opacity = 1
+        let pasteNode = SCNNode()
+        pasteNode.geometry = copyNode.geometry
+        pasteNode.geometry?.materials = (copyNode.geometry?.materials)!
+  
+        boxNodeNumber += 1
+        boxNodeNumbers.append(boxNodeNumber)
+        pasteNode.name = "boxNode\(boxNodeNumber)"
+        pasteNode.opacity = 1
+        pasteNode.position = SCNVector3(copyNode.position.x - 0.2,copyNode.position.y, copyNode.position.z)
+        sceneView.scene.rootNode.addChildNode(pasteNode)
+        copyConfirmOff.alpha = 0
+        copyConfirmOn.alpha = 0
+        //importAllCoordinates()
+        //updateAllCordinates()
+        
+        print("boxWidth of paste is \(boxGeometry.width)")
+        eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": copyNode.geometry?.firstMaterial?.diffuse.contents as! UIImage], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
+        print("boxWidth of paste is \(boxGeometry.width)")
+       // eachBoxSize.updateValue((["x": boxGeometry.width, "y": copyNode.geometry, "z": boxGeometry.height], ["color": copyNode.geometry?.firstMaterial?.diffuse.contents as! UIImage], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
+        movingStatus = .currentMovingNotChosen
+        print("did dublicate node to scene")
+        print("movingstatus is\(movingStatus)")
+      
+    }
+    
+    func createConfirmText(){
+        let text = SKLabelNode(text: "DONE!")
+        text.fontName = "Avenir Next Bold"
+        text.fontSize = 14
+        text.position = CGPoint(x: 0, y: -30)
+        overlay.addChild(text)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.2)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        text.run(SKAction.sequence([fadeIn, fadeOut]))
+    }
+    func createCopyText(){
+        let text = SKLabelNode(text: "SELECT TO COPY")
+        text.fontName = "Avenir Next Bold"
+        text.fontSize = 14
+        text.position = CGPoint(x: 0, y: -30)
+        overlay.addChild(text)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.2)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        text.run(SKAction.sequence([fadeIn, fadeOut]))
     }
     @IBOutlet var upBtn: UIButton!
     @IBOutlet var rightBtn: UIButton!
     @IBOutlet var downBtn: UIButton!
     @IBOutlet var leftBtn: UIButton!
-    @IBOutlet var inBtn: UIButton!
-    @IBOutlet var outBtn: UIButton!
+    @IBOutlet var in1Btn: UIButton!
+    @IBOutlet var out1Btn: UIButton!
+    @IBOutlet var confirmOn: UIButton!
+    @IBOutlet var confirmOff: UIButton!
+    @IBOutlet var copyBtn: UIButton!
+    @IBOutlet var copyConfirmOff: UIButton!
+    @IBOutlet var copyConfirmOn: UIButton!
     
     
     func createPanel(){
