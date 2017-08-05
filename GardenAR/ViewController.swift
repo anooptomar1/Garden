@@ -712,13 +712,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
 
     }
     func updateAllCordinates(){
-//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxWidth, forKey: "x")
-//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxHight, forKey: "y")
-//        eachBoxSize[copyBoxNmber]!.0.updateValue(boxLength, forKey: "z")
-//        eachBoxSize[copyBoxNmber]!.1.updateValue(boxColor, forKey: "color")
-//        eachBoxSize[copyBoxNmber]!.2.updateValue(boxMetal, forKey: "metal")
-//        eachBoxSize[copyBoxNmber]!.3.updateValue(boxRoughness, forKey: "roughness")
-//        eachBoxSize[copyBoxNmber]!.4.updateValue(boxNormal, forKey: "normal")
+
+    
+        eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
+        eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
+        eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+        eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
+        eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
+        eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
@@ -735,13 +736,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         eachBoxSize[destinationBoxNumber]!.4.updateValue(boxNormalD, forKey: "normal")
     }
     func importAllCoordinates(){
-//        boxLength = eachBoxSize[copyBoxNmber]!.0["z"]!
-//        boxHight = eachBoxSize[copyBoxNmber]!.0["y"]!
-//        boxWidth = eachBoxSize[copyBoxNmber]!.0["x"]!
-//        boxColor = eachBoxSize[copyBoxNmber]!.1["color"]!
-//        boxMetal = eachBoxSize[copyBoxNmber]!.2["metal"]!
-//        boxRoughness = eachBoxSize[copyBoxNmber]!.3["roughness"]!
-        //boxNormal = eachBoxSize[copyBoxNmber]!.4["normal"]!
+
         boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
         boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
         boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
@@ -770,6 +765,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     
     var isMoving = Bool()
     var copyNode = SCNNode()
+    var currentSelctedCopyNode = SCNNode()
     var copyBoxNmber = Int()
     enum SelectionType{
         case currentMovingChosen
@@ -799,11 +795,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 self.currentNode = node
                                 self.currentMovingNode = node
                                 self.currentBoxNumber = boxNodeNumber
+                                self.currentSelctedCopyNode = node
                                 print("currentMovingNode name is\(self.currentMovingNode.name)")
                                 //
                                 self.addingState = .notAddAble
                                 self.scaleAble = true
                                 self.currentMovingNode.opacity = 0.7
+                                self.currentSelctedCopyNode.opacity = 0.7
+                                self.currentNode.opacity = 0.7
                                 print("selected boxwidth is \(self.boxGeometry.width)")
                                 UIView.animate(withDuration: 0.3, animations: {
                                     self.upBtn.alpha = 0.5
@@ -816,6 +815,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                     self.plusBtn.alpha = 0.5
                                     self.confirmOn.alpha = 0
                                     self.confirmOff.alpha = 0.5
+                                    self.copyBtn.alpha = 0.5
                                 }) { (finished) in
                                 }
                                 group.leave()
@@ -956,26 +956,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                             }) { (finished) in
                             }
 
-                        }
-                    }
-                }else if movingStatus == .chooseToCopy{
-                    for boxNodeNumber in boxNodeNumbers{
-                        let node = hitObject.node
-                        if node.name == "boxNode\(boxNodeNumber)"{
-                            copyNode = node
-                            copyBoxNmber = boxNodeNumber
-                            copyNode.opacity = 0.5
-                            tapGestureRecognizer.isEnabled = false
-                            print("chose a node to copy")
-                            print("moving status is\(movingStatus)")
-                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxWidth, forKey: "x")
-                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxHight, forKey: "y")
-                            eachBoxSize[copyBoxNmber]!.0.updateValue(boxLength, forKey: "z")
-                            eachBoxSize[copyBoxNmber]!.1.updateValue(boxColor, forKey: "color")
-                            eachBoxSize[copyBoxNmber]!.2.updateValue(boxMetal, forKey: "metal")
-                            eachBoxSize[copyBoxNmber]!.3.updateValue(boxRoughness, forKey: "roughness")
-                            eachBoxSize[copyBoxNmber]!.4.updateValue(boxNormal, forKey: "normal")
-                            
                         }
                     }
                 }
@@ -1292,51 +1272,46 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         
     }
     @IBAction func copyAction(_ sender: Any) {
+        //change status
         movingStatus = .chooseToCopy
-        UIView.animate(withDuration: 0.2, animations: {
-            self.copyConfirmOn.alpha = 0
-            self.copyConfirmOff.alpha = 1
-        }) { (finished) in
-        }
+
+        // done message
         createCopyText()
-    }
-    var dublicatedNode = SCNNode()
-    @IBAction func copyConfirmAction(_ sender: Any) {
-        print("pressed button to confirm paste")
-        //dublicates all chosen nodes
-        //movingStatus = .pasteCopy
-        boxLength = eachBoxSize[copyBoxNmber]!.0["z"]!
-        boxHight = eachBoxSize[copyBoxNmber]!.0["y"]!
-        boxWidth = eachBoxSize[copyBoxNmber]!.0["x"]!
-        boxColor = eachBoxSize[copyBoxNmber]!.1["color"]!
-        boxMetal = eachBoxSize[copyBoxNmber]!.2["metal"]!
-        boxRoughness = eachBoxSize[copyBoxNmber]!.3["roughness"]!
-        boxNormal = eachBoxSize[copyBoxNmber]!.4["normal"]!
+        print("This is the currentBoxNumber: \( eachBoxSize[currentBoxNumber]!)")
+        //dublicates chosen node
+        boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
+        boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
+        boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
+        boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+        boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
+        boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
+        boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
         copyNode.opacity = 1
-        let pasteNode = SCNNode()
-        pasteNode.geometry = copyNode.geometry
-        pasteNode.geometry?.materials = (copyNode.geometry?.materials)!
-  
-        boxNodeNumber += 1
-        boxNodeNumbers.append(boxNodeNumber)
-        pasteNode.name = "boxNode\(boxNodeNumber)"
-        pasteNode.opacity = 1
-        pasteNode.position = SCNVector3(copyNode.position.x - 0.2,copyNode.position.y, copyNode.position.z)
-        sceneView.scene.rootNode.addChildNode(pasteNode)
-        copyConfirmOff.alpha = 0
-        copyConfirmOn.alpha = 0
-        //importAllCoordinates()
-        //updateAllCordinates()
         
-        print("boxWidth of paste is \(boxGeometry.width)")
-        eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": copyNode.geometry?.firstMaterial?.diffuse.contents as! UIImage], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
-        print("boxWidth of paste is \(boxGeometry.width)")
-       // eachBoxSize.updateValue((["x": boxGeometry.width, "y": copyNode.geometry, "z": boxGeometry.height], ["color": copyNode.geometry?.firstMaterial?.diffuse.contents as! UIImage], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
-        movingStatus = .currentMovingNotChosen
-        print("did dublicate node to scene")
-        print("movingstatus is\(movingStatus)")
+        // need to be newBoxNumber
+        let newBoxNumber = eachBoxSize.count
+        if newBoxNumber != nil {
+            
+            eachBoxSize.updateValue((["x": boxWidth, "y": boxHight, "z": boxLength], ["color": boxColor], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: newBoxNumber)
+            
+            let pasteNode = SCNNode()
+            pasteNode.geometry = currentSelctedCopyNode.geometry
+            pasteNode.geometry?.materials = (currentSelctedCopyNode.geometry?.materials)!
+            pasteNode.name = "boxNode\(newBoxNumber)"
+            pasteNode.opacity = 1
+            pasteNode.position = SCNVector3(currentSelctedCopyNode.position.x - 0.2,currentSelctedCopyNode.position.y, currentSelctedCopyNode.position.z)
+            sceneView.scene.rootNode.addChildNode(pasteNode)
+            
+            print("boxNodeNumbers.count is \(eachBoxSize.count)")
+            
+            //when done change state to normal state
+            movingStatus = .currentMovingNotChosen
+            
+        }
       
     }
+ 
+    
     
     func createConfirmText(){
         let text = SKLabelNode(text: "DONE!")
