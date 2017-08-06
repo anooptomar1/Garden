@@ -24,10 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBOutlet weak var trashBtn: UIButton!
     
     //import metal
-    var metalView: MTKView {
-        return view as! MTKView
-    }
-    var renderer: Renderer?
+
     
     enum NodeType{
         case redBox
@@ -130,21 +127,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        //set metal
-//        metalView.device = MTLCreateSystemDefaultDevice()
-//        guard let device = metalView.device else{
-//            fatalError()
-//        }
-//        metalView.clearColor = MTLClearColor(red: 0, green: 0, blue: 1, alpha: 1)
-//
-//        renderer = Renderer(device: device)
-//        metalView.delegate = renderer
-//
-//
-        
+      
         // Set the view's delegate
         sceneView.delegate = self
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints,ARSCNDebugOptions.showWorldOrigin]
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
         // Create a new scene
@@ -155,7 +141,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
        // sceneView.autoenablesDefaultLighting = false
         let env = UIImage(named: "spherical")
         sceneView.scene.lightingEnvironment.contents = env
-        sceneView.scene.lightingEnvironment.intensity = 2.0
+        sceneView.scene.lightingEnvironment.intensity = 3.0
   
         
         overlay = SKScene(size:CGSize(width:375,height:750))
@@ -170,7 +156,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
      
-        insertSpotLight(position: SCNVector3(0,1.0,1.0))
+        insertSpotLight(position: SCNVector3(0,1.0,0))
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
@@ -179,18 +165,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         spotLight.spotOuterAngle = 45
         spotLight.castsShadow = true
         spotLight.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+        spotLight.shadowRadius = 100
         spotLight.shadowMode = .deferred
     
-
-        //spotLight.shadowColor = UIColor.black
-        //spotLight.automaticallyAdjustsShadowProjection = true
-        
         let spotNode = SCNNode()
         spotNode.name = "SpotNode"
         spotNode.light = spotLight
         spotNode.position = position
         
-        //spotNode.light?.orthographicScale = 100
+        spotNode.light?.orthographicScale = 100
         
         spotNode.eulerAngles = SCNVector3(-Double.pi/2.0,0,-0.2)
         self.sceneView.scene.rootNode.addChildNode(spotNode)
@@ -213,16 +196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
    
     @IBAction func scaleUp(_ sender: Any) {
         print("scaleable up is \(scaleAble)")
-        plusBtn.alpha = 1
-        minusBtn.alpha = 1
-        upBtn.alpha = 1
-        downBtn.alpha = 1
-        leftBtn.alpha = 1
-        rightBtn.alpha = 1
-        in1Btn.alpha = 1
-        out1Btn.alpha = 1
-        self.minusBtn.alpha = 1
-        self.plusBtn.alpha = 1
+
         confirmOn.alpha = 0
         confirmOff.alpha = 1
         if scaleAble{
@@ -317,16 +291,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     @IBAction func scaleDown(_ sender: Any) {
-        plusBtn.alpha = 1
-        minusBtn.alpha = 1
-        upBtn.alpha = 1
-        downBtn.alpha = 1
-        leftBtn.alpha = 1
-        rightBtn.alpha = 1
-        in1Btn.alpha = 1
-        out1Btn.alpha = 1
-        self.minusBtn.alpha = 1
-        self.plusBtn.alpha = 1
+
         confirmOn.alpha = 0
         confirmOff.alpha = 1
         
@@ -423,7 +388,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         print("delete")
         if scaleAble{
             print("in delete: nodes name is\(currentNode.name)")
+            //remove node
            currentNode.removeFromParentNode()
+            //display confirm text
+           createDeleteText()
+            //take away panel
+            displayAllBtns(toAlpha: 0.0)
+            confirmOff.alpha = 0.0
+            confirmOn.alpha = 0.0
         }
     }
     
@@ -469,7 +441,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var panelState = PanelOpened.panelClosed
     var addingState = AddObject.addAble
     @objc func tapped(recognizer :UIGestureRecognizer) {
-        if addingState == .addAble{
+        
             let sceneView = recognizer.view as! ARSCNView
             let touchLocation = recognizer.location(in: sceneView)
             let hitTestResult = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
@@ -477,9 +449,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 guard let hitResult = hitTestResult.first else {
                     return
                 }
-                // get the hittest of one cube site
-                
-                
+                //copy the chosen node
+                if movingStatus == .chooseToCopy{
+                    boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
+                    boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
+                    boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
+                    boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
+                    boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
+                    boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
+                    boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
+                    //add new cube
+                    addCopiedBox(hitResult: hitResult, color: boxColor, metal: boxMetal, roughness: boxRoughness, normal: boxNormal, width: boxWidth, height: boxHight, length: boxLength)
+                    //add copy text and take off panel
+                    displayAllBtns(toAlpha: 0.0)
+                    confirmOff.alpha = 0.0
+                    confirmOn.alpha = 0.0
+                    createCopyText()
+                    //change moving state
+                    movingStatus = .currentMovingNotChosen
+
+                }
+                if addingState == .addAble{
                 //pick the chosen color, add cube to scene in that color
                 if chosenStatus == .redBox{
                     addBox(hitResult: hitResult, color: UIImage(named: "blockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
@@ -558,24 +548,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
 
 
+    @IBAction func cancelSceneAction(_ sender: Any) {
+//        for child in sc
+//        sceneView.scene.rootNode.childNodes.removeAll()
+//        
+    }
     
     @IBAction func takeScreenshot(_ sender: Any) {
         print("screenshot")
     }
     @IBAction func addObjects(_ sender: Any) {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.upBtn.alpha = 0
-            self.downBtn.alpha = 0
-            self.leftBtn.alpha = 0
-            self.rightBtn.alpha = 0
-            self.in1Btn.alpha = 0
-            self.out1Btn.alpha = 0
-            self.minusBtn.alpha = 0
-            self.plusBtn.alpha = 0
-            self.confirmOn.alpha = 0
-            self.confirmOff.alpha = 0
-        }) { (finished) in
-        }
+        displayAllBtns(toAlpha: 0.0)
+        confirmOff.alpha = 0
+        confirmOn.alpha = 0
         if openedPanel == true{
             closePanel()
         }else if openedPanel == false{
@@ -646,34 +631,87 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
             print(boxRoughness)
         boxGeometry.chamferRadius = 0
         boxGeometry.materials = [front, right, back, left, top, bottom]
-        //boxGeometry.materials = [material]
-        boxNode = SCNNode(geometry: boxGeometry)
-            //boxNode.castsShadow = true
 
-            //boxNode.light?.orthographicScale = 50
+        boxNode = SCNNode(geometry: boxGeometry)
             
         boxNode.name = "boxNode\(boxNodeNumber)"
             eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
         print("added node \(eachBoxSize)")
-//            let shadowGeometry = SCNBox(width: 0.2, height: 0.01, length: 0.3, chamferRadius: 0)
-//            let shadowMaterial = SCNMaterial()
-//            shadowMaterial.diffuse.contents = UIImage(named: "cubeShadow")
-//            shadowGeometry.materials = [shadowMaterial]
-//            let shadowNode = SCNNode(geometry: shadowGeometry)
-//            shadowNode.name = "shadow\(boxNodeNumber)"
-//            shadowYposition = boxNode.position.y - Float(boxHight / 2)
-//            //shadowNode.position = SCNVector3(0,-0.1,-0.05)
-//            shadowNode.position = SCNVector3(boxNode.position.x, boxNode.position.y - Float(boxGeometry.height/2), boxNode.position.z)
-//            //shadowNode.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2.0), 1.0, 0.0, 0.0);
-//            sceneView.scene.rootNode.addChildNode(shadowNode)
-//            shadows.append(shadowNode)
-//            //boxNode.addChildNode(shadowNode)
-
+   
+        }
+    }
+    private func addCopiedBox(hitResult :ARHitTestResult, color: UIImage, metal: UIImage, roughness: UIImage, normal: UIImage, width: CGFloat, height: CGFloat, length: CGFloat) {
+        //disactivate selected and scaleable
+        scaleAble = false
+        selected = false
+        isMoving = false
+        addingNewCube = true
+        currentMovingNode.opacity = 1
+       // movingStatus = .currentMovingNotChosen
+        //
+        if addingNewCube{
+            boxNodeNumber += 1
+            boxNodeNumbers.append(boxNodeNumber)
+            boxWidth = width
+            boxHight = height
+            boxLength = length
+            boxMetal = metal
+            boxRoughness = roughness
+            boxNormal = normal
+            boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
+            let material = SCNMaterial()
+            material.diffuse.contents = color
+            let top = SCNMaterial()
+            top.diffuse.contents = color
+            top.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            top.roughness.contents = boxRoughness
+            top.metalness.contents = boxMetal
+            top.normal.contents = boxNormal
+            let bottom = SCNMaterial()
+            bottom.diffuse.contents = color
+            bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
             
+            bottom.roughness.contents = boxRoughness
+            bottom.metalness.contents = boxMetal
+            bottom.normal.contents = boxNormal
+            let left = SCNMaterial()
+            left.diffuse.contents = color
+            left.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            left.roughness.contents = boxRoughness
+            left.metalness.contents = boxMetal
+            left.normal.contents = boxNormal
+            let right = SCNMaterial()
+            right.diffuse.contents = color
+            right.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            right.roughness.contents = boxRoughness
+            right.metalness.contents = boxMetal
+            right.normal.contents = boxNormal
+            let front = SCNMaterial()
+            front.diffuse.contents = color
+            front.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            front.roughness.contents = boxRoughness
+            front.metalness.contents = boxMetal
+            front.normal.contents = boxNormal
+            let back = SCNMaterial()
+            back.diffuse.contents = color
+            back.lightingModel = SCNMaterial.LightingModel.physicallyBased
+            back.roughness.contents = boxRoughness
+            back.metalness.contents = boxMetal
+            back.normal.contents = boxNormal
             
+            print(boxRoughness)
+            boxGeometry.chamferRadius = 0
+            boxGeometry.materials = [front, right, back, left, top, bottom]
             
+            boxNode = SCNNode(geometry: boxGeometry)
+            
+            boxNode.name = "boxNode\(boxNodeNumber)"
+            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
+            boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
+            self.sceneView.scene.rootNode.addChildNode(boxNode)
+            print("added node \(eachBoxSize)")
             
         }
     }
@@ -705,10 +743,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         if estimate == nil{
             return
         }
-        let intensity = (estimate?.ambientIntensity)! / 1000
+        //let intensity = (estimate?.ambientIntensity)! / 1000
         let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
-        spotNode?.light?.intensity = intensity
-        //spotNode?.light?.intensity = (estimate?.ambientIntensity)!
+        //spotNode?.light?.intensity = intensity
+        spotNode?.light?.intensity = (estimate?.ambientIntensity)!
 
     }
     func updateAllCordinates(){
@@ -764,7 +802,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     
     var isMoving = Bool()
-    var copyNode = SCNNode()
     var currentSelctedCopyNode = SCNNode()
     var copyBoxNmber = Int()
     enum SelectionType{
@@ -773,6 +810,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         case chooseNewMovingNode
         case chooseToCopy
         case pasteCopy
+    }
+    func displayAllBtns(toAlpha: CGFloat){
+        UIView.animate(withDuration: 0.3, animations: {
+            self.upBtn.alpha = toAlpha
+            self.downBtn.alpha = toAlpha
+            self.leftBtn.alpha = toAlpha
+            self.rightBtn.alpha = toAlpha
+            self.in1Btn.alpha = toAlpha
+            self.out1Btn.alpha = toAlpha
+            self.minusBtn.alpha = toAlpha
+            self.plusBtn.alpha = toAlpha
+            self.copyBtn.alpha = toAlpha
+            self.trashBtn.alpha = toAlpha
+        }) { (finished) in
+        }
     }
     
     var movingStatus = SelectionType.currentMovingNotChosen
@@ -804,20 +856,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 self.currentSelctedCopyNode.opacity = 0.7
                                 self.currentNode.opacity = 0.7
                                 print("selected boxwidth is \(self.boxGeometry.width)")
-                                UIView.animate(withDuration: 0.3, animations: {
-                                    self.upBtn.alpha = 0.5
-                                    self.downBtn.alpha = 0.5
-                                    self.leftBtn.alpha = 0.5
-                                    self.rightBtn.alpha = 0.5
-                                    self.in1Btn.alpha = 0.5
-                                    self.out1Btn.alpha = 0.5
-                                    self.minusBtn.alpha = 0.5
-                                    self.plusBtn.alpha = 0.5
-                                    self.confirmOn.alpha = 0
-                                    self.confirmOff.alpha = 0.5
-                                    self.copyBtn.alpha = 0.5
-                                }) { (finished) in
-                                }
+                                self.displayAllBtns(toAlpha: 1.0)
+                                self.confirmOff.alpha = 1
+                                self.confirmOn.alpha = 0
                                 group.leave()
                             }
                             group.notify(queue: .main){
@@ -841,19 +882,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                         if destinationNode.position.x == currentMovingNode.position.x && destinationNode.position.y == currentMovingNode.position.y && destinationNode.position.z == currentMovingNode.position.z{
                             movingStatus = .currentMovingNotChosen
                             currentMovingNode.opacity = 1
-                            UIView.animate(withDuration: 0.3, animations: {
-                                self.upBtn.alpha = 0
-                                self.downBtn.alpha = 0
-                                self.leftBtn.alpha = 0
-                                self.rightBtn.alpha = 0
-                                self.in1Btn.alpha = 0
-                                self.out1Btn.alpha = 0
-                                self.minusBtn.alpha = 0
-                                self.plusBtn.alpha = 0
-                                self.confirmOn.alpha = 0
-                                self.confirmOff.alpha = 0
-                            }) { (finished) in
-                            }
+                            displayAllBtns(toAlpha: 0.0)
+                            confirmOff.alpha = 0
+                            confirmOn.alpha = 0
                             print("run.......")
                         }else{
                             print("run3")
@@ -902,20 +933,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                                 self.currentMovingNode.opacity = 1
                                 self.showHiglightOfDestinationFace(material: material!)
                             
-                                UIView.animate(withDuration: 0.3, animations: {
-                                    self.upBtn.alpha = 0
-                                    self.downBtn.alpha = 0
-                                    self.leftBtn.alpha = 0
-                                    self.rightBtn.alpha = 0
-                                    self.in1Btn.alpha = 0
-                                    self.out1Btn.alpha = 0
-                                    self.minusBtn.alpha = 0
-                                    self.plusBtn.alpha = 0
-                                    self.confirmOn.alpha = 0
-                                    self.confirmOff.alpha = 0
-                                }) { (finished) in
-                                }
-                                
+                                self.displayAllBtns(toAlpha: 0.0)
+                                self.confirmOff.alpha = 0
+                                self.confirmOn.alpha = 0
                                 group.leave()
                           
                             }
@@ -942,19 +962,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                             tapGestureRecognizer.isEnabled = false
                             //fade in coordinate buttons
                             
-                            UIView.animate(withDuration: 0.3, animations: {
-                                self.upBtn.alpha = 0.5
-                                self.downBtn.alpha = 0.5
-                                self.leftBtn.alpha = 0.5
-                                self.rightBtn.alpha = 0.5
-                                self.in1Btn.alpha = 0.5
-                                self.out1Btn.alpha = 0.5
-                                self.minusBtn.alpha = 0.5
-                                self.plusBtn.alpha = 0.5
-                                self.confirmOn.alpha = 0
-                                self.confirmOff.alpha = 0.5
-                            }) { (finished) in
-                            }
+                           displayAllBtns(toAlpha: 0.0)
+                            confirmOff.alpha = 0.0
+                            confirmOn.alpha = 0.0
 
                         }
                     }
@@ -1154,16 +1164,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
    
     @IBAction func upAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
             currentMovingNode.position.y += 0.01
            
         }
@@ -1171,78 +1171,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     }
     @IBAction func rightAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
+
             currentMovingNode.position.x += 0.01
         }
     }
     @IBAction func downAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
+
             currentMovingNode.position.y -= 0.01
             
         }
     }
     @IBAction func leftAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
+
             currentMovingNode.position.x -= 0.01
         }
     }
     @IBAction func outAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
+
             currentMovingNode.position.z -= 0.01
          print("out")
         }
     }
     @IBAction func inAction(_ sender: Any) {
         if movingStatus ==  .currentMovingChosen{
-            upBtn.alpha = 1
-            downBtn.alpha = 1
-            leftBtn.alpha = 1
-            rightBtn.alpha = 1
-            in1Btn.alpha = 1
-            out1Btn.alpha = 1
-            self.minusBtn.alpha = 1
-            self.plusBtn.alpha = 1
-            confirmOn.alpha = 0
-            confirmOff.alpha = 1
+
             currentMovingNode.position.z += 0.01
             print("in")
         }
@@ -1253,17 +1208,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         confirmOn.alpha = 1
         currentMovingNode.opacity = 1
         movingStatus = .currentMovingNotChosen
-        UIView.animate(withDuration: 0.5, animations: {
-            self.upBtn.alpha = 0.0
-            self.downBtn.alpha = 0.0
-            self.leftBtn.alpha = 0.0
-            self.rightBtn.alpha = 0.0
-            self.in1Btn.alpha = 0.0
-            self.out1Btn.alpha = 0.0
-            self.minusBtn.alpha = 0.0
-            self.plusBtn.alpha = 0.0
-        }) { (finished) in
-        }
+        displayAllBtns(toAlpha: 0.0)
         UIView.animate(withDuration: 0.7, animations: {
             self.confirmOn.alpha = 0.0
             self.createConfirmText()
@@ -1274,41 +1219,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBAction func copyAction(_ sender: Any) {
         //change status
         movingStatus = .chooseToCopy
-
-        // done message
-        createCopyText()
-        print("This is the currentBoxNumber: \( eachBoxSize[currentBoxNumber]!)")
-        //dublicates chosen node
-        boxLength = eachBoxSize[currentBoxNumber]!.0["z"]!
-        boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
-        boxWidth = eachBoxSize[currentBoxNumber]!.0["x"]!
-        boxColor = eachBoxSize[currentBoxNumber]!.1["color"]!
-        boxMetal = eachBoxSize[currentBoxNumber]!.2["metal"]!
-        boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
-        boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
-        copyNode.opacity = 1
-        
-        // need to be newBoxNumber
-        let newBoxNumber = eachBoxSize.count
-        if newBoxNumber != nil {
-            
-            eachBoxSize.updateValue((["x": boxWidth, "y": boxHight, "z": boxLength], ["color": boxColor], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: newBoxNumber)
-            
-            let pasteNode = SCNNode()
-            pasteNode.geometry = currentSelctedCopyNode.geometry
-            pasteNode.geometry?.materials = (currentSelctedCopyNode.geometry?.materials)!
-            pasteNode.name = "boxNode\(newBoxNumber)"
-            pasteNode.opacity = 1
-            pasteNode.position = SCNVector3(currentSelctedCopyNode.position.x - 0.2,currentSelctedCopyNode.position.y, currentSelctedCopyNode.position.z)
-            sceneView.scene.rootNode.addChildNode(pasteNode)
-            
-            print("boxNodeNumbers.count is \(eachBoxSize.count)")
-            
-            //when done change state to normal state
-            movingStatus = .currentMovingNotChosen
-            
-        }
-      
     }
  
     
@@ -1324,7 +1234,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         text.run(SKAction.sequence([fadeIn, fadeOut]))
     }
     func createCopyText(){
-        let text = SKLabelNode(text: "SELECT TO COPY")
+        let text = SKLabelNode(text: "PASTE!")
+        text.fontName = "Avenir Next Bold"
+        text.fontSize = 14
+        text.position = CGPoint(x: 0, y: -30)
+        overlay.addChild(text)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.2)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        text.run(SKAction.sequence([fadeIn, fadeOut]))
+    }
+    func createDeleteText(){
+        let text = SKLabelNode(text: "DELETE!")
         text.fontName = "Avenir Next Bold"
         text.fontSize = 14
         text.position = CGPoint(x: 0, y: -30)
@@ -1342,8 +1262,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     @IBOutlet var confirmOn: UIButton!
     @IBOutlet var confirmOff: UIButton!
     @IBOutlet var copyBtn: UIButton!
-    @IBOutlet var copyConfirmOff: UIButton!
-    @IBOutlet var copyConfirmOn: UIButton!
+
     
     
     func createPanel(){

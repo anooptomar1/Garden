@@ -34,10 +34,6 @@
 		9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9AE1F263299007063D4 /* OverlayPlane.swift */; };
 		9381F9B11F2633E7007063D4 /* overlay_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 9381F9B01F2633E7007063D4 /* overlay_grid.png */; };
 		9381F9B71F267BAD007063D4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9B61F267BAD007063D4 /* Utilities.swift */; };
-		93D606D11F35DD740018814C /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93D606D01F35DD730018814C /* shader.metal */; };
-		93D606D31F35E00E0018814C /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D606D21F35E00E0018814C /* Renderer.swift */; };
-		93D606D51F35E05C0018814C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D606D41F35E05C0018814C /* Model.swift */; };
-		93D606D71F35E0850018814C /* MatrixMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D606D61F35E0850018814C /* MatrixMath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,10 +66,6 @@
 		9381F9AE1F263299007063D4 /* OverlayPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPlane.swift; sourceTree = "<group>"; };
 		9381F9B01F2633E7007063D4 /* overlay_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = overlay_grid.png; path = "../../../../../../Downloads/Hello-AR/Hello-AR/overlay_grid.png"; sourceTree = "<group>"; };
 		9381F9B61F267BAD007063D4 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		93D606D01F35DD730018814C /* shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
-		93D606D21F35E00E0018814C /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		93D606D41F35E05C0018814C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		93D606D61F35E0850018814C /* MatrixMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixMath.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,10 +101,6 @@
 				9331481D1F2512FE00CA7085 /* AppDelegate.swift */,
 				9331481F1F2512FE00CA7085 /* art.scnassets */,
 				933148211F2512FE00CA7085 /* ViewController.swift */,
-				93D606D01F35DD730018814C /* shader.metal */,
-				93D606D21F35E00E0018814C /* Renderer.swift */,
-				93D606D41F35E05C0018814C /* Model.swift */,
-				93D606D61F35E0850018814C /* MatrixMath.swift */,
 				9381F9B61F267BAD007063D4 /* Utilities.swift */,
 				9381F9AE1F263299007063D4 /* OverlayPlane.swift */,
 				93455D5D1F2F476C00066876 /* Environment */,
@@ -283,14 +271,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93D606D51F35E05C0018814C /* Model.swift in Sources */,
 				933148221F2512FE00CA7085 /* ViewController.swift in Sources */,
-				93D606D71F35E0850018814C /* MatrixMath.swift in Sources */,
 				9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */,
 				9381F9B71F267BAD007063D4 /* Utilities.swift in Sources */,
 				9331481E1F2512FE00CA7085 /* AppDelegate.swift in Sources */,
-				93D606D31F35E00E0018814C /* Renderer.swift in Sources */,
-				93D606D11F35DD740018814C /* shader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
