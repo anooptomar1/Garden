@@ -10,19 +10,58 @@ import UIKit
 import SceneKit
 import SpriteKit
 import ARKit
+import ReplayKit
 import QuartzCore
-import MetalKit
+import GameKit
+import GoogleMobileAds
 
+//extension of UIImage
+extension UIImage {
+    class func imageWithView(view: UIView) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
+    }
+}
+//extension UIImage {
+//    convenience init(_ view: UIView) {
+//        UIGraphicsBeginImageContext(view.frame.size)
+//        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//        self.init(cgImage: (image?.cgImage)!)
+//    }
+//}
+extension UIView {
+    
+    // Using a function since `var image` might conflict with an existing variable
+    // (like on `UIImageView`)
+    func asImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        return renderer.image { rendererContext in
+            layer.render(in: rendererContext.cgContext)
+        }
+    }
+}
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GADBannerViewDelegate {
 
+    //AdMob Banner
+    
+    @IBOutlet var bannerView: GADBannerView!
+  
+    
+    
+    
+    //
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var addingBtn: UIButton!
     @IBOutlet weak var camBtn: UIButton!
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var minusBtn: UIButton!
     @IBOutlet weak var trashBtn: UIButton!
-    
     //import metal
 
     
@@ -110,12 +149,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var boxMetalD = UIImage()
     var boxRoughnessD = UIImage()
     var boxNormalD = UIImage()
-//    var top = SCNMaterial()
-//    var bottom = SCNMaterial()
-//    var left = SCNMaterial()
-//    var right = SCNMaterial()
-//    var front = SCNMaterial()
-//    var back = SCNMaterial()
+
     
     var currentNode = SCNNode()
     var currentMovingNode = SCNNode()
@@ -123,11 +157,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var currentNodeGeo = SCNGeometry()
     var selected = Bool()
     var scaleAble = Bool()
-    //var inProgress = false
+
+    
+    func showBannerAd(){
+        //banner ad
+        let request = GADRequest()
+        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
+        var bannerView: GADBannerView!
+        if UIDevice.current.userInterfaceIdiom == .pad{
+            bannerView = GADBannerView(adSize: kGADAdSizeFullBanner)
+            bannerView.center = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2 - self.view.frame.height / 2 + 45)
+        }
+        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        bannerView.delegate = self
+        bannerView.rootViewController = self
+        bannerView.load(request)
+        
+        let view = bannerView
+        let image = UIImage.imageWithView(view: view!)
+        
+      
+        //self.view.addSubview(bannerView)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      
+        // admob
+        //showBannerAd()
+//        let request = GADRequest()
+//        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
+//        adViewDidReceiveAd(view: bannerAR)
+//        bannerAR.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+//        bannerAR.rootViewController = self
+//        bannerAR.delegate = self
+//        bannerAR.load(request)
+        
+        
+        
         // Set the view's delegate
         sceneView.delegate = self
         self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
@@ -155,8 +221,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         registerGestureRecognizers()
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
-     
+        
         insertSpotLight(position: SCNVector3(0,1.0,0))
+
     }
     private func insertSpotLight(position: SCNVector3){
         let spotLight = SCNLight()
@@ -471,6 +538,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
                 }
                 if addingState == .addAble{
                 //pick the chosen color, add cube to scene in that color
+                    
                 if chosenStatus == .redBox{
                     addBox(hitResult: hitResult, color: UIImage(named: "blockIcon")!, metal: UIImage(named: "scuffed-plastic-metal")!, roughness: UIImage(named: "scuffed-plastic-roughness")!, normal: UIImage(named: "scuffed-plastic-normal")!)
                 }else if chosenStatus == .blueBox{
@@ -537,7 +605,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
         }else{
             for plane in self.planes{
                 plane.planeGeometry.materials.forEach({ (material) in
-                    material.diffuse.contents = UIImage(named:"transparentOverlay")
+                    material.diffuse.contents = UIImage(named:"overlay_grid.png")
+                     material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
                 })
             }
         }
@@ -549,14 +618,63 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
 
 
     @IBAction func cancelSceneAction(_ sender: Any) {
-//        for child in sc
-//        sceneView.scene.rootNode.childNodes.removeAll()
-//        
+        for child in sceneView.scene.rootNode.childNodes{
+            for boxNodeNumber in boxNodeNumbers{
+            if child.name == "boxNode\(boxNodeNumber)"{
+                child.removeFromParentNode()
+                
+            }
+        }
+        }
+
     }
     
     @IBAction func takeScreenshot(_ sender: Any) {
         print("screenshot")
+        let bounds = overlay.view?.bounds
+        UIGraphicsBeginImageContextWithOptions((bounds?.size)!, true, UIScreen.main.scale)
+        overlay.view?.drawHierarchy(in: bounds!, afterScreenUpdates: true)
+        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
+        let activityVC = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+        self.present(activityVC, animated: true, completion:  nil)
     }
+    
+    @IBAction func takeVideoAction(_ sender: Any) {
+        
+    }
+    
+    let recorder = RPScreenRecorder.shared()
+    @IBAction func recordAction(_ sender: Any) {
+        print("pushed record")
+        
+        recorder.startRecording(handler: <#T##((Error?) -> Void)?##((Error?) -> Void)?##(Error?) -> Void#>)
+        recorder.startRecording { (error) in
+            if let error = error{
+                print("error")
+                
+            }
+        }
+    }
+    
+    
+    @IBAction func stopRecordAction(_ sender: Any) {
+       print("pushed stop record")
+        recorder.stopRecording { (previewVC, error) in
+            if let previewVC = previewVC{
+                previewVC.previewControllerDelegate = self
+                self.present(previewVC, animated: true, completion: nil)
+            }
+            if let error = error{
+                print(error)
+            }
+        }
+    }
+    
+    
+
     @IBAction func addObjects(_ sender: Any) {
         displayAllBtns(toAlpha: 0.0)
         confirmOff.alpha = 0
@@ -570,6 +688,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     var shadowYposition = Float()
     var addingNewCube = Bool()
     private func addBox(hitResult :ARHitTestResult, color: UIImage, metal: UIImage, roughness: UIImage, normal: UIImage) {
+        
+        
         //disactivate selected and scaleable
         scaleAble = false
         selected = false
@@ -1418,6 +1538,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate {
     
 }
 
-
+extension ViewController: RPPreviewViewControllerDelegate{
+    func previewControllerDidFinish(_ previewController: RPPreviewViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+}
 
 

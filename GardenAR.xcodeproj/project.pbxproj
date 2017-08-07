@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9328B43F1F376B74005396E3 /* FirebaseCoreDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */; };
+		9328B4401F376B74005396E3 /* FirebaseNanoPB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */; };
+		9328B4441F376BA2005396E3 /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */; };
 		9331481E1F2512FE00CA7085 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9331481D1F2512FE00CA7085 /* AppDelegate.swift */; };
 		933148201F2512FE00CA7085 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 9331481F1F2512FE00CA7085 /* art.scnassets */; };
 		933148221F2512FE00CA7085 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933148211F2512FE00CA7085 /* ViewController.swift */; };
@@ -31,12 +34,22 @@
 		93455D5C1F2F41DB00066876 /* scuffed-plastic-roughness.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D4D1F2F41D900066876 /* scuffed-plastic-roughness.png */; };
 		93455D601F2F476C00066876 /* spherical.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5E1F2F476C00066876 /* spherical.jpg */; };
 		93455D611F2F476C00066876 /* sphericalBlurred.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5F1F2F476C00066876 /* sphericalBlurred.png */; };
+		93595AED1F376E2A00004982 /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */; };
+		9381A0011F37636800CFC14B /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93819FFF1F37636800CFC14B /* GoogleMobileAds.framework */; };
+		9381A0021F37636800CFC14B /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9381A0001F37636800CFC14B /* README.txt */; };
 		9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9AE1F263299007063D4 /* OverlayPlane.swift */; };
 		9381F9B11F2633E7007063D4 /* overlay_grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 9381F9B01F2633E7007063D4 /* overlay_grid.png */; };
 		9381F9B71F267BAD007063D4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9B61F267BAD007063D4 /* Utilities.swift */; };
+		93C5CFE21F37756000B8F27D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93C5CFE11F37756000B8F27D /* GoogleService-Info.plist */; };
+		93CA370D1F376DC6008F8F1D /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93CA370C1F376CF6008F8F1D /* FirebaseAnalytics.framework */; };
+		93CA370E1F376DCB008F8F1D /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9328B4411F376B74005396E3 /* FirebaseCore.framework */; };
+		97D2479F3A3203CB9F98B2F6 /* Pods_GardenAR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98401AE95F1A0B065CD948D1 /* Pods_GardenAR.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9328B4411F376B74005396E3 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Pods/FirebaseCore/Frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
+		9328B4421F376B9C005396E3 /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = nanopb.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/GardenAR-ccvtevnhihupnufovldorvlnhhqd/Build/Products/Debug-iphoneos/nanopb/nanopb.framework"; sourceTree = "<group>"; };
+		9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleToolboxForMac.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/GardenAR-ccvtevnhihupnufovldorvlnhhqd/Build/Products/Debug-iphoneos/GoogleToolboxForMac/GoogleToolboxForMac.framework"; sourceTree = "<group>"; };
 		9331481A1F2512FE00CA7085 /* GardenAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GardenAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9331481D1F2512FE00CA7085 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9331481F1F2512FE00CA7085 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -63,9 +76,19 @@
 		93455D4D1F2F41D900066876 /* scuffed-plastic-roughness.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scuffed-plastic-roughness.png"; sourceTree = "<group>"; };
 		93455D5E1F2F476C00066876 /* spherical.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = spherical.jpg; sourceTree = "<group>"; };
 		93455D5F1F2F476C00066876 /* sphericalBlurred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sphericalBlurred.png; sourceTree = "<group>"; };
+		934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCoreDiagnostics.framework; path = Pods/FirebaseCore/Frameworks/FirebaseCoreDiagnostics.framework; sourceTree = "<group>"; };
+		934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseNanoPB.framework; path = Pods/FirebaseCore/Frameworks/FirebaseNanoPB.framework; sourceTree = "<group>"; };
+		93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseInstanceID.framework; path = Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		93819FFF1F37636800CFC14B /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
+		9381A0001F37636800CFC14B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		9381F9AE1F263299007063D4 /* OverlayPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPlane.swift; sourceTree = "<group>"; };
 		9381F9B01F2633E7007063D4 /* overlay_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = overlay_grid.png; path = "../../../../../../Downloads/Hello-AR/Hello-AR/overlay_grid.png"; sourceTree = "<group>"; };
 		9381F9B61F267BAD007063D4 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		93C5CFE11F37756000B8F27D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		93CA370C1F376CF6008F8F1D /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		98401AE95F1A0B065CD948D1 /* Pods_GardenAR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GardenAR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0D14B1D24C191C34460795B /* Pods-GardenAR.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GardenAR.release.xcconfig"; path = "Pods/Target Support Files/Pods-GardenAR/Pods-GardenAR.release.xcconfig"; sourceTree = "<group>"; };
+		D24096D67917A8A377E73448 /* Pods-GardenAR.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GardenAR.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GardenAR/Pods-GardenAR.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,17 +96,42 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93595AED1F376E2A00004982 /* FirebaseInstanceID.framework in Frameworks */,
+				9381A0011F37636800CFC14B /* GoogleMobileAds.framework in Frameworks */,
+				93CA370D1F376DC6008F8F1D /* FirebaseAnalytics.framework in Frameworks */,
+				93CA370E1F376DCB008F8F1D /* FirebaseCore.framework in Frameworks */,
+				9328B43F1F376B74005396E3 /* FirebaseCoreDiagnostics.framework in Frameworks */,
+				9328B4401F376B74005396E3 /* FirebaseNanoPB.framework in Frameworks */,
+				9328B4441F376BA2005396E3 /* GoogleToolboxForMac.framework in Frameworks */,
+				97D2479F3A3203CB9F98B2F6 /* Pods_GardenAR.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D7184A4CE4D069AF8BC75F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */,
+				93CA370C1F376CF6008F8F1D /* FirebaseAnalytics.framework */,
+				9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */,
+				9328B4421F376B9C005396E3 /* nanopb.framework */,
+				9328B4411F376B74005396E3 /* FirebaseCore.framework */,
+				934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */,
+				934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */,
+				98401AE95F1A0B065CD948D1 /* Pods_GardenAR.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		933148111F2512FE00CA7085 = {
 			isa = PBXGroup;
 			children = (
 				9331481C1F2512FE00CA7085 /* GardenAR */,
 				9331481B1F2512FE00CA7085 /* Products */,
+				E41A557A13570553F647D00A /* Pods */,
+				6D7184A4CE4D069AF8BC75F1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				9331481D1F2512FE00CA7085 /* AppDelegate.swift */,
+				93819FFE1F37636800CFC14B /* GoogleMobileAdsSdkiOS-7.21.0 4 */,
 				9331481F1F2512FE00CA7085 /* art.scnassets */,
 				933148211F2512FE00CA7085 /* ViewController.swift */,
 				9381F9B61F267BAD007063D4 /* Utilities.swift */,
@@ -111,6 +160,7 @@
 				933148261F2512FE00CA7085 /* Assets.xcassets */,
 				933148281F2512FE00CA7085 /* LaunchScreen.storyboard */,
 				9331482B1F2512FE00CA7085 /* Info.plist */,
+				93C5CFE11F37756000B8F27D /* GoogleService-Info.plist */,
 			);
 			path = GardenAR;
 			sourceTree = "<group>";
@@ -180,6 +230,25 @@
 			path = "../../../../../../Downloads/PBROrbs-iOS10-SceneKit-master/PBROrbs/Assets/Environment";
 			sourceTree = "<group>";
 		};
+		93819FFE1F37636800CFC14B /* GoogleMobileAdsSdkiOS-7.21.0 4 */ = {
+			isa = PBXGroup;
+			children = (
+				93819FFF1F37636800CFC14B /* GoogleMobileAds.framework */,
+				9381A0001F37636800CFC14B /* README.txt */,
+			);
+			name = "GoogleMobileAdsSdkiOS-7.21.0 4";
+			path = "../../../../../../Downloads/GoogleMobileAdsSdkiOS-7.21.0 4";
+			sourceTree = "<group>";
+		};
+		E41A557A13570553F647D00A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D24096D67917A8A377E73448 /* Pods-GardenAR.debug.xcconfig */,
+				B0D14B1D24C191C34460795B /* Pods-GardenAR.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -187,9 +256,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9331482E1F2512FE00CA7085 /* Build configuration list for PBXNativeTarget "GardenAR" */;
 			buildPhases = (
+				9895216DC0436B7C4D3D462A /* [CP] Check Pods Manifest.lock */,
 				933148161F2512FE00CA7085 /* Sources */,
 				933148171F2512FE00CA7085 /* Frameworks */,
 				933148181F2512FE00CA7085 /* Resources */,
+				67721ECD9590D13508AD7269 /* [CP] Embed Pods Frameworks */,
+				4C270E3C45AD2D2C3076C308 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -251,8 +323,10 @@
 				9331482A1F2512FE00CA7085 /* LaunchScreen.storyboard in Resources */,
 				93455D501F2F41DB00066876 /* bamboo-wood-semigloss-normal.png in Resources */,
 				93455D541F2F41DB00066876 /* oakfloor2-roughness.png in Resources */,
+				9381A0021F37636800CFC14B /* README.txt in Resources */,
 				933148271F2512FE00CA7085 /* Assets.xcassets in Resources */,
 				93455D531F2F41DB00066876 /* oakfloor2-normal.png in Resources */,
+				93C5CFE21F37756000B8F27D /* GoogleService-Info.plist in Resources */,
 				93455D521F2F41DB00066876 /* oakfloor2-albedo.png in Resources */,
 				93455D551F2F41DB00066876 /* rustediron-streaks-albedo.png in Resources */,
 				93455D511F2F41DB00066876 /* bamboo-wood-semigloss-roughness.png in Resources */,
@@ -265,6 +339,56 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4C270E3C45AD2D2C3076C308 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Pods/FirebaseCore/Frameworks",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GardenAR/Pods-GardenAR-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		67721ECD9590D13508AD7269 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Pods/FirebaseCore/Frameworks",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GardenAR/Pods-GardenAR-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9895216DC0436B7C4D3D462A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		933148161F2512FE00CA7085 /* Sources */ = {
@@ -409,9 +533,16 @@
 		};
 		9331482F1F2512FE00CA7085 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D24096D67917A8A377E73448 /* Pods-GardenAR.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8GL695U4E9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/FirebaseCore/Frameworks",
+					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
+					"$(PROJECT_DIR)/Pods/FirebaseInstanceID/Frameworks",
+				);
 				INFOPLIST_FILE = GardenAR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.GardenAR;
@@ -423,9 +554,16 @@
 		};
 		933148301F2512FE00CA7085 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0D14B1D24C191C34460795B /* Pods-GardenAR.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8GL695U4E9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/FirebaseCore/Frameworks",
+					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
+					"$(PROJECT_DIR)/Pods/FirebaseInstanceID/Frameworks",
+				);
 				INFOPLIST_FILE = GardenAR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.GardenAR;
