@@ -46,7 +46,7 @@ extension UIView {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GADBannerViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GADBannerViewDelegate, RPPreviewViewControllerDelegate {
 
     //AdMob Banner
     
@@ -196,7 +196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         
         // Set the view's delegate
         sceneView.delegate = self
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
         // Create a new scene
@@ -204,10 +204,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         // Set the scene to the view
         sceneView.scene = scene
         
-       // sceneView.autoenablesDefaultLighting = false
+        sceneView.autoenablesDefaultLighting = false
         let env = UIImage(named: "spherical")
         sceneView.scene.lightingEnvironment.contents = env
-        sceneView.scene.lightingEnvironment.intensity = 3.0
+        sceneView.scene.lightingEnvironment.intensity = 2.0
   
         
         overlay = SKScene(size:CGSize(width:375,height:750))
@@ -222,27 +222,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         registeredLongGestureRecognizer()
         registeredPanGestureRecognizer()
         
-        insertSpotLight(position: SCNVector3(0,1.0,0))
+        blurrEfect(bg: middleBig)
+        blurrEfect(bg: middleSmall)
+        blurrEfect(bg: plusImg)
+        blurrEfect(bg: minusImg)
+        blurrEfect(bg: trashImg)
+        blurrEfect(bg: copyImg)
+        blurrEfect(bg: takesPhotobtnImg)
+        insertSpotLight(position: SCNVector3(0.5,1.0,1.0))
 
     }
+    var spotLight = SCNLight()
     private func insertSpotLight(position: SCNVector3){
-        let spotLight = SCNLight()
+         spotLight = SCNLight()
         spotLight.type = .directional
-        spotLight.spotInnerAngle = 45
-        spotLight.spotOuterAngle = 45
+        spotLight.spotInnerAngle = 40
+        spotLight.spotOuterAngle = 40
         spotLight.castsShadow = true
         spotLight.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
-        spotLight.shadowRadius = 100
+        //spotLight.shadowRadius = 100
         spotLight.shadowMode = .deferred
-    
+
         let spotNode = SCNNode()
         spotNode.name = "SpotNode"
         spotNode.light = spotLight
         spotNode.position = position
         
-        spotNode.light?.orthographicScale = 100
+        //spotNode.light?.orthographicScale = 100
         
-        spotNode.eulerAngles = SCNVector3(-Double.pi/2.0,0,-0.2)
+        spotNode.eulerAngles = SCNVector3(-Double.pi/2,0,-0.2)
         self.sceneView.scene.rootNode.addChildNode(spotNode)
     }
     var tapGestureRecognizer = UITapGestureRecognizer()
@@ -265,7 +273,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         print("scaleable up is \(scaleAble)")
 
         confirmOn.alpha = 0
-        confirmOff.alpha = 1
+
         if scaleAble{
             print("can scale u = \(scaleAble)")
             // check eachBoxSize is not nil
@@ -359,8 +367,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     
     @IBAction func scaleDown(_ sender: Any) {
 
-        confirmOn.alpha = 0
-        confirmOff.alpha = 1
+        confirmOn.alpha = 1
+
         
         print("scaleable down is \(scaleAble)")
         if scaleAble{
@@ -461,7 +469,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
            createDeleteText()
             //take away panel
             displayAllBtns(toAlpha: 0.0)
-            confirmOff.alpha = 0.0
+        
             confirmOn.alpha = 0.0
         }
     }
@@ -529,7 +537,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                     addCopiedBox(hitResult: hitResult, color: boxColor, metal: boxMetal, roughness: boxRoughness, normal: boxNormal, width: boxWidth, height: boxHight, length: boxLength)
                     //add copy text and take off panel
                     displayAllBtns(toAlpha: 0.0)
-                    confirmOff.alpha = 0.0
+     
                     confirmOn.alpha = 0.0
                     createCopyText()
                     //change moving state
@@ -589,6 +597,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         }
     }
   
+    @IBOutlet var groundScanLable: UILabel!
+    @IBOutlet var switchBtn: UISwitch!
     @IBAction func switching(_ sender: UISwitch) {
         let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
         configuration.isLightEstimationEnabled = true
@@ -598,25 +608,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         if sender.isOn == true{
             for plane in self.planes{
                 plane.planeGeometry.materials.forEach({ (material) in
-                    material.diffuse.contents = UIColor.white
-                    material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
+                    material.diffuse.contents = UIImage(named:"planeBlue")
+                    spotLight.shadowMode = .forward
+                    self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
+                    //material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
                 })
             }
         }else{
             for plane in self.planes{
                 plane.planeGeometry.materials.forEach({ (material) in
-                    material.diffuse.contents = UIImage(named:"overlay_grid.png")
-                     material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
+                    spotLight.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+                    //spotLight.shadowRadius = 100
+                    spotLight.shadowMode = .deferred
+                    material.diffuse.contents = UIColor.white
+                    material.colorBufferWriteMask = SCNColorMask(rawValue: 0)
+                    self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
                 })
             }
         }
-        
-        
-        
-        
     }
 
-
+    @IBOutlet var cancelBtn: UIButton!
     @IBAction func cancelSceneAction(_ sender: Any) {
         for child in sceneView.scene.rootNode.childNodes{
             for boxNodeNumber in boxNodeNumbers{
@@ -630,54 +642,138 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
     
     @IBAction func takeScreenshot(_ sender: Any) {
+        //the camera button, changing to alpha 1
+        print("pushed photo1")
+        UIView.animate(withDuration: 0.3, animations: {
+            self.takesPhotoBtn.alpha = 1.0
+            self.takesPhotobtnImg.alpha = 1.0
+            //change alpha of all buttons in scene
+            self.addingBtn.alpha = 0
+            self.switchBtn.alpha = 0
+            self.groundScanLable.alpha = 0
+            self.camBtn.alpha = 0.0
+            self.cancelBtn.alpha = 0.0
+            
+        }) { (finished) in
+        }
+    }
+    
+    func screenshotAnimation(){
+        let screen = SKSpriteNode(imageNamed: "blackScreen")
+        screen.size = overlay.size
+        screen.alpha = 0
+        overlay.addChild(screen)
+        let action1 = SKAction.fadeIn(withDuration: 0.1)
+        let wait = SKAction.wait(forDuration: 0.1)
+        let action2 = SKAction.fadeOut(withDuration: 0.1)
+        let remove = SKAction.removeFromParent()
+        screen.run(SKAction.sequence([action1, wait, action2, remove]))
+    }
+    @IBOutlet var takesPhotobtnImg: UIImageView!
+    @IBOutlet var takesPhotoBtn: UIButton!
+    
+    enum ShootingCase{
+        case takingScreenshoot
+        case doneTakingScreenshot
+    }
+    var screenshotImage = UIImageView()
+    var screenshotStatus = ShootingCase.doneTakingScreenshot
+    @IBAction func takesPhoto(_ sender: Any) {
+        // taking screenshot, and changing button back to alpha 0.0
         print("screenshot")
+        //
         let bounds = overlay.view?.bounds
         UIGraphicsBeginImageContextWithOptions((bounds?.size)!, true, UIScreen.main.scale)
         overlay.view?.drawHierarchy(in: bounds!, afterScreenUpdates: true)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
+        screenshotImage = UIImageView(image: screenshot)
+        screenshotImage.bounds.size = view.bounds.size / 6
+        //screenshotImage.center = self.view.center
+        screenshotImage.center.y = self.view.center.y + 250
+        screenshotImage.center.x = self.view.center.x + 315
+        self.view.addSubview(screenshotImage)
+        
+        //
+        func changeStatus(){
+            screenshotStatus = .takingScreenshoot
+        }
         let activityVC = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
         activityVC.popoverPresentationController?.sourceView = self.view
-        self.present(activityVC, animated: true, completion:  nil)
+        self.present(activityVC, animated: true, completion: changeStatus)
+        //
+        screenshotAnimation()
+        UIView.animate(withDuration: 0.3, animations: {
+            self.takesPhotoBtn.alpha = 0.0
+            self.takesPhotobtnImg.alpha = 0.0
+            //change alpha of all buttons in scene
+            self.addingBtn.alpha = 1
+            self.switchBtn.alpha = 1
+            self.groundScanLable.alpha = 1
+            self.camBtn.alpha = 1
+            self.cancelBtn.alpha = 1
+        }) { (finished) in
+        }
     }
+    
+    
+    
     
     @IBAction func takeVideoAction(_ sender: Any) {
         
     }
     
-    let recorder = RPScreenRecorder.shared()
+
     @IBAction func recordAction(_ sender: Any) {
-        print("pushed record")
-        
-        recorder.startRecording(handler: <#T##((Error?) -> Void)?##((Error?) -> Void)?##(Error?) -> Void#>)
+     let recorder = RPScreenRecorder.shared()
         recorder.startRecording { (error) in
-            if let error = error{
-                print("error")
-                
+            if error != nil{
+                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
-    
     
     @IBAction func stopRecordAction(_ sender: Any) {
-       print("pushed stop record")
+       let recorder = RPScreenRecorder.shared()
         recorder.stopRecording { (previewVC, error) in
-            if let previewVC = previewVC{
-                previewVC.previewControllerDelegate = self
-                self.present(previewVC, animated: true, completion: nil)
-            }
-            if let error = error{
-                print(error)
-            }
+       
+                if let unwrappedPreview = previewVC {
+                    unwrappedPreview.previewControllerDelegate = self
+                    
+                    if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+                        self.present(unwrappedPreview, animated: true, completion: nil)
+                    }
+                    else {
+                        unwrappedPreview.popoverPresentationController?.barButtonItem = self.navigationItem.leftBarButtonItem!
+                        unwrappedPreview.modalPresentationStyle = .popover
+                        unwrappedPreview.modalPresentationStyle = UIModalPresentationStyle.popover
+                        unwrappedPreview.preferredContentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+                        self.present(unwrappedPreview, animated: true, completion: nil)
+                        
+                    }
+                }
+//                self.present(
+//                    vc,
+//                    animated:  true,
+//                    completion: nil
+//                )
+            
         }
     }
-    
     
 
     @IBAction func addObjects(_ sender: Any) {
+        //screenshotsaction disable
+        if screenshotStatus == .takingScreenshoot{
+            screenshotStatus = .doneTakingScreenshot
+            screenshotImage.removeFromSuperview()
+        }
+        //
         displayAllBtns(toAlpha: 0.0)
-        confirmOff.alpha = 0
+        
         confirmOn.alpha = 0
         if openedPanel == true{
             closePanel()
@@ -753,7 +849,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         boxGeometry.materials = [front, right, back, left, top, bottom]
 
         boxNode = SCNNode(geometry: boxGeometry)
-            
+        boxNode.light?.castsShadow = true
         boxNode.name = "boxNode\(boxNodeNumber)"
             eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
         boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
@@ -846,7 +942,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
     func openPanel(){
         panelState = .panelOpened
-        let moveUp = SKAction.moveTo(y: -60, duration: 0.3)
+        let moveUp = SKAction.moveTo(y: -30, duration: 0.3)
         openedPanel = true
         panel.run(moveUp)
         tapGestureRecognizer.isEnabled = false
@@ -943,6 +1039,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.plusBtn.alpha = toAlpha
             self.copyBtn.alpha = toAlpha
             self.trashBtn.alpha = toAlpha
+            self.middleRound.alpha = toAlpha
+            self.middleSmall.alpha = toAlpha
+            self.middleBig.alpha = toAlpha
+            self.copyImg.alpha = toAlpha
+            self.trashImg.alpha = toAlpha
+            self.plusImg.alpha = toAlpha
+            self.minusImg.alpha = toAlpha
         }) { (finished) in
         }
     }
@@ -952,6 +1055,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         case Front, Right, Back, Left, Top, Bottom
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if screenshotStatus == .takingScreenshoot{
+            screenshotStatus = .doneTakingScreenshot
+            screenshotImage.removeFromSuperview()
+        }
         if let touch = touches.first{
             let location = touch.location(in: sceneView as ARSCNView)
             let hitList = sceneView.hitTest(location, options: nil)
@@ -977,8 +1084,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                                 self.currentNode.opacity = 0.7
                                 print("selected boxwidth is \(self.boxGeometry.width)")
                                 self.displayAllBtns(toAlpha: 1.0)
-                                self.confirmOff.alpha = 1
-                                self.confirmOn.alpha = 0
+                            
+                                self.confirmOn.alpha = 1
                                 group.leave()
                             }
                             group.notify(queue: .main){
@@ -1003,7 +1110,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                             movingStatus = .currentMovingNotChosen
                             currentMovingNode.opacity = 1
                             displayAllBtns(toAlpha: 0.0)
-                            confirmOff.alpha = 0
+                          
                             confirmOn.alpha = 0
                             print("run.......")
                         }else{
@@ -1054,7 +1161,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                                 self.showHiglightOfDestinationFace(material: material!)
                             
                                 self.displayAllBtns(toAlpha: 0.0)
-                                self.confirmOff.alpha = 0
+                               
                                 self.confirmOn.alpha = 0
                                 group.leave()
                           
@@ -1083,7 +1190,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                             //fade in coordinate buttons
                             
                            displayAllBtns(toAlpha: 0.0)
-                            confirmOff.alpha = 0.0
+                          
                             confirmOn.alpha = 0.0
 
                         }
@@ -1262,6 +1369,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         let plane = OverlayPlane(anchor: anchor as! ARPlaneAnchor)
         self.planes.append(plane)
         node.addChildNode(plane)
+
+    
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
@@ -1324,7 +1433,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
 
     @IBAction func confirmAction(_ sender: Any) {
-        confirmOff.alpha = 0
+      
         confirmOn.alpha = 1
         currentMovingNode.opacity = 1
         movingStatus = .currentMovingNotChosen
@@ -1373,6 +1482,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         let fadeOut = SKAction.fadeOut(withDuration: 0.8)
         text.run(SKAction.sequence([fadeIn, fadeOut]))
     }
+    //All myUIButtons and UIImages
     @IBOutlet var upBtn: UIButton!
     @IBOutlet var rightBtn: UIButton!
     @IBOutlet var downBtn: UIButton!
@@ -1380,17 +1490,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     @IBOutlet var in1Btn: UIButton!
     @IBOutlet var out1Btn: UIButton!
     @IBOutlet var confirmOn: UIButton!
-    @IBOutlet var confirmOff: UIButton!
+  
+    @IBOutlet var middleRound: UIImageView!
     @IBOutlet var copyBtn: UIButton!
-
+    @IBOutlet var middleSmall: UIImageView!
+    @IBOutlet var middleBig: UIImageView!
+    @IBOutlet var minusImg: UIImageView!
+    @IBOutlet var plusImg: UIImageView!
+    @IBOutlet var trashImg: UIImageView!
+    @IBOutlet var copyImg: UIImageView!
+    @IBOutlet var blurBarImg: UIImageView!
+    @IBOutlet var displayLbl: UILabel!
     
+    
+
+    func blurrEfect(bg: UIImageView){
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = bg.bounds
+        //blurView.layer.borderWidth = 1
+        blurView.layer.cornerRadius = bg.frame.height / 2
+        blurView.clipsToBounds = true
+        bg.addSubview(blurView)
+    }
+  
     
     func createPanel(){
+    
         panel = SKSpriteNode(imageNamed: "panel")
         panel.position = CGPoint(x: 0, y: -(view.frame.height / 1.5))
         //let scaleHeight = panel.size.width / panel.size.width * panel.size.height
         panel.size = CGSize(width: 300, height: 300)
         overlay.addChild(panel)
+ 
         //create red box
         blockIcon = SKSpriteNode(imageNamed: "blockIcon")
         blockIcon.name = "boxIcon"
@@ -1538,10 +1670,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     
 }
 
-extension ViewController: RPPreviewViewControllerDelegate{
-    func previewControllerDidFinish(_ previewController: RPPreviewViewController) {
-        dismiss(animated: true, completion: nil)
-    }
-}
+
 
 

@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "shareBtn.png",
+      "filename" : "Tplus.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Tplus@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Tplus@3x.png",
       "scale" : "3x"
     }
   ],
