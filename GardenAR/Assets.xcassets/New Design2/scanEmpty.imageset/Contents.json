@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "TroundPanel2.png",
+      "filename" : "scanEmpty.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "scanEmpty@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "scanEmpty@3x.png",
       "scale" : "3x"
     }
   ],
