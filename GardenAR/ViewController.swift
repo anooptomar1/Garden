@@ -1101,7 +1101,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.pinkPanel.layer.zPosition = 0
             self.confirm360.alpha = 0
             self.camer360Img.alpha = 0
-            self.camera360ImgGreen.alpha = 0
             self.displayLbl.text = ""
             self.addingBtn.alpha = 1
             self.addingBtn.layer.zPosition = 10
@@ -1170,29 +1169,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                     
                     
                     plane.planeGeometry.materials.forEach({ (material) in
-                        
-                        let request = GADRequest()
-                        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
-                        var bannerView: GADBannerView!
-                        if UIDevice.current.userInterfaceIdiom == .pad{
-                            bannerView = GADBannerView(adSize: kGADAdSizeFullBanner)
-                            bannerView.center = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2 - self.view.frame.height / 2 + 45)
-                        }
-                        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
-                        bannerView.delegate = self
-                        bannerView.rootViewController = self
-                        bannerView.load(request)
-                        
-                        let view = bannerView
-                        let image = UIImage.imageWithView(view: view!)
-                        
-                        
-                        
-                        
+                       
                         var geometry = SCNGeometry()
                         geometry = plane.planeGeometry
                         let material = SCNMaterial()
-                        material.diffuse.contents = image as! UIImage
+                        material.diffuse.contents = UIImage(named:"planeBlue")
                         geometry.materials = [material]
                         self.nodeOverPlane = SCNNode(geometry: geometry)
                         self.nodeOverPlane.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2.0), 1.0, 0.0, 0.0);
@@ -1691,7 +1672,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     @IBOutlet var displayLbl: UILabel!
     @IBOutlet var confirm360: UIButton!
     @IBOutlet var camer360Img: UIImageView!
-    @IBOutlet var camera360ImgGreen: UIImageView!
     
     @IBOutlet var scanBtn: UIButton!
     //pink panel and items
