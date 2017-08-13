@@ -93,9 +93,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
     var overlay: SKScene!
     var planes = [OverlayPlane]()
-    // [nodeName: (["x": Int], ["color": "selectedColor"])]
-    var eachBoxSize: [Int: ([String: CGFloat], [String: UIImage], [String: UIImage], [String: UIImage], [String: UIImage] )] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": UIImage(named: "scuffed-plastic-albedo")!], ["metal": UIImage(named: "scuffed-plastic-metal")!], ["roughness": UIImage(named: "scuffed-plastic-roughness")!], ["normal": UIImage(named: "scuffed-plastic-normal")!])]
-    //var boxColor = String()
+ 
+//    let boxData = UserDefaults.standard.integer(forKey: "box")
+//    let dataaaa = UserDefaults.standard.array(forKey: "boxes")
+//    
+//    func savepurchase(purchase: Bool, purchaseName: String){
+//        //save purchase
+//
+//            UserDefaults.standard.set(eachBoxSize, forKey: "box")
+//
+//
+//    }
+//
+    var eachBoxSize: [Int: ([String: CGFloat], [String: UIImage], [String: UIImage], [String: UIImage], [String: UIImage], [String: SCNVector3])] = [90000000: (["x": 0.2, "y": 0.2, "z": 0.2], ["color": UIImage(named: "scuffed-plastic-albedo")!], ["metal": UIImage(named: "scuffed-plastic-metal")!], ["roughness": UIImage(named: "scuffed-plastic-roughness")!], ["normal": UIImage(named: "scuffed-plastic-normal")!], ["position": SCNVector3(0,0,0)])]
+   
+    
+ 
     var openedPanel = false
     //status
     var chosenStatus = NodeType.redBox
@@ -150,7 +163,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     var boxMetalD = UIImage()
     var boxRoughnessD = UIImage()
     var boxNormalD = UIImage()
-
+    var boxPosition = SCNVector3()
     
     var currentNode = SCNNode()
     var currentMovingNode = SCNNode()
@@ -363,8 +376,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
             boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
             
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! + SCNVector3(0,0.005,0)
+            
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height:  boxHight, length: boxLength, chamferRadius: 0)
+            
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
             eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
@@ -375,6 +391,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             
             print("eachboxSize  after scale is \(eachBoxSize)")
             currentNode.geometry = geo
+            currentNode.position = boxPosition
+            //currentNode.position.y += 0.005
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+            
             let top = SCNMaterial()
             top.diffuse.contents = boxColor
             top.lightingModel = SCNMaterial.LightingModel.physicallyBased
@@ -459,6 +479,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             boxRoughness = eachBoxSize[currentBoxNumber]!.3["roughness"]!
             boxNormal = eachBoxSize[currentBoxNumber]!.4["normal"]!
             
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! - SCNVector3(0,0.005,0)
+            
             //eachBoxSize[currentBoxNumber]
             var geo = SCNGeometry()
             geo = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
@@ -470,6 +492,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
             eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
             currentNode.geometry = geo
+            currentNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
             let top = SCNMaterial()
             top.diffuse.contents = boxColor
             top.lightingModel = SCNMaterial.LightingModel.physicallyBased
@@ -547,9 +571,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                 for boxNodeNumber in boxNodeNumbers{
                     if node.name == "boxNode\(boxNodeNumber)"{
                         print("touched on \(boxNodeNumber)")
-                        node.position.x = hitResult.worldTransform.columns.3.x
-                        node.position.z = hitResult.worldTransform.columns.3.z
-                        node.position.y = hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2)
+                        self.currentNode = node
+                        self.currentBoxNumber = boxNodeNumber
+                        boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]!
+//                        currentNode.position.x = hitResult.worldTransform.columns.3.x
+//                        currentNode.position.z = hitResult.worldTransform.columns.3.z
+                        //node.position.y = hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2)
+                        boxHight = eachBoxSize[currentBoxNumber]!.0["y"]!
+                        boxPosition = SCNVector3(hitResult.worldTransform.columns.3.x, hitResult.worldTransform.columns.3.y + Float(boxHight / 2), hitResult.worldTransform.columns.3.z)
+                        currentNode.position = boxPosition
+                        
+                        eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+                        print("in moving currentBoxnode position is \(boxPosition)")
                     }else{
                         print("touch on screen tapGesture = \(tapGestureRecognizer.isEnabled) ")
                     }
@@ -814,10 +847,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         boxWidth = 0.2
         boxHight = 0.2
         boxLength = 0.2
-            boxMetal = metal
-            boxRoughness = roughness
-            boxNormal = normal
+        boxMetal = metal
+        boxRoughness = roughness
+        boxNormal = normal
         boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
+        boxPosition = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
         let material = SCNMaterial()
         material.diffuse.contents = color
         let top = SCNMaterial()
@@ -829,7 +863,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         let bottom = SCNMaterial()
         bottom.diffuse.contents = color
             bottom.lightingModel = SCNMaterial.LightingModel.physicallyBased
-
             bottom.roughness.contents = boxRoughness
             bottom.metalness.contents = boxMetal
             bottom.normal.contents = boxNormal
@@ -863,12 +896,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         boxGeometry.materials = [front, right, back, left, top, bottom]
 
         boxNode = SCNNode(geometry: boxGeometry)
-        boxNode.light?.castsShadow = true
+       // boxNode.light?.castsShadow = true
         boxNode.name = "boxNode\(boxNodeNumber)"
-            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
-        boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
+        boxNode.position = boxPosition
+
+            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal], ["position": boxPosition]), forKey: boxNodeNumber)
         self.sceneView.scene.rootNode.addChildNode(boxNode)
-        print("added node \(eachBoxSize)")
+        print("boxPosition is \(boxPosition)")
    
         }
     }
@@ -891,6 +925,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             boxRoughness = roughness
             boxNormal = normal
             boxGeometry = SCNBox(width: boxWidth, height: boxHight, length: boxLength, chamferRadius: 0)
+            boxPosition = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
             let material = SCNMaterial()
             material.diffuse.contents = color
             let top = SCNMaterial()
@@ -936,10 +971,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             boxGeometry.materials = [front, right, back, left, top, bottom]
             
             boxNode = SCNNode(geometry: boxGeometry)
-            
             boxNode.name = "boxNode\(boxNodeNumber)"
-            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal]), forKey: boxNodeNumber)
-            boxNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,hitResult.worldTransform.columns.3.y + Float(boxGeometry.height/2), hitResult.worldTransform.columns.3.z)
+            boxNode.position = boxPosition
+            eachBoxSize.updateValue((["x": boxGeometry.width, "y": boxGeometry.height, "z": boxGeometry.height], ["color": color], ["metal": boxMetal], ["roughness": boxRoughness], ["normal": boxNormal], ["position": boxPosition]), forKey: boxNodeNumber)
             self.sceneView.scene.rootNode.addChildNode(boxNode)
             print("added node \(eachBoxSize)")
             
@@ -979,17 +1013,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         let spotNode = self.sceneView.scene.rootNode.childNode(withName: "SpotNode", recursively: true)
         //spotNode?.light?.intensity = intensity
         spotNode?.light?.intensity = (estimate?.ambientIntensity)!
-
+        
     }
     func updateAllCordinates(){
 
     
-        eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
-        eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
-        eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
-        eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
-        eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
-        eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
+//        eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
+//        eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
+//        eachBoxSize[currentBoxNumber]!.1.updateValue(boxColor, forKey: "color")
+//        eachBoxSize[currentBoxNumber]!.2.updateValue(boxMetal, forKey: "metal")
+//        eachBoxSize[currentBoxNumber]!.3.updateValue(boxRoughness, forKey: "roughness")
+//        eachBoxSize[currentBoxNumber]!.4.updateValue(boxNormal, forKey: "normal")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxWidth, forKey: "x")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxHight, forKey: "y")
         eachBoxSize[currentBoxNumber]!.0.updateValue(boxLength, forKey: "z")
@@ -1004,6 +1038,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         eachBoxSize[destinationBoxNumber]!.2.updateValue(boxMetalD, forKey: "metal")
         eachBoxSize[destinationBoxNumber]!.3.updateValue(boxRoughnessD, forKey: "roughness")
         eachBoxSize[destinationBoxNumber]!.4.updateValue(boxNormalD, forKey: "normal")
+        //updates current position of node
+        eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+        eachBoxSize[destinationBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
     }
     func importAllCoordinates(){
 
@@ -1021,6 +1058,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         boxMetalD = eachBoxSize[destinationBoxNumber]!.2["metal"]!
         boxRoughnessD = eachBoxSize[destinationBoxNumber]!.3["roughness"]!
         boxNormalD = eachBoxSize[destinationBoxNumber]!.4["normal"]!
+        //imports position of node
+        boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]!
+        boxPosition = eachBoxSize[destinationBoxNumber]!.5["position"]!
     }
     func showHiglightOfDestinationFace(material: SCNMaterial){
         let highlight = CABasicAnimation(keyPath: "opacity")
@@ -1252,6 +1292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                             self.displayLbl.text = ""
                             displayAllBtns(toAlpha: 0.0)
                             confirmOn.alpha = 0
+                            addingBtn.alpha = 1
                             print("run.......")
                         }else{
                             print("run3")
@@ -1266,6 +1307,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                                 if hitObject.geometryIndex == 0{
                                 
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(self.self.boxLengthD)/2) +  (Float(self.boxLength)/2)), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z + Float(self.self.boxLengthD)/2) +  (Float(self.boxLength)/2))
+                                    
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
                                    // currentMovingNode.childNode(withName: "shadow\(currentBoxNumber)", recursively: true)?.position.y += 0.01
@@ -1273,26 +1317,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                                     print("front")
                                 }else if hitObject.geometryIndex == 1{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x + Float(self.boxWidthD)/2) + (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3((destinationNode.position.x + Float(self.boxWidthD)/2) + (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z)
+                                    
                                     self.updateAllCordinates()
                                     self.self.currentMovingNode.runAction(moveToTappedNode)
                                     print("right")
                                 }else if hitObject.geometryIndex == 2{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z - Float(self.boxLengthD)/2) - (Float(self.boxLength)/2)), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3(destinationNode.position.x, destinationNode.position.y, (destinationNode.position.z - Float(self.boxLengthD)/2) - (Float(self.boxLength)/2))
+                                    
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
                                     print("back")
                                 }else if hitObject.geometryIndex == 3{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3((destinationNode.position.x - Float(self.boxWidthD)/2) - (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3((destinationNode.position.x - Float(self.boxWidthD)/2) - (Float(self.boxWidth)/2), destinationNode.position.y, destinationNode.position.z)
+                                    
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
                                     print("left")
                                 }else if hitObject.geometryIndex == 4{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y + Float(self.boxHightD)/2) + (Float(self.boxHight)/2), destinationNode.position.z), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3(destinationNode.position.x, (destinationNode.position.y + Float(self.boxHightD)/2) + (Float(self.boxHight)/2), destinationNode.position.z)
+                                    
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
                                     print("top")
                                 }else if hitObject.geometryIndex == 5{
                                     let moveToTappedNode = SCNAction.move(to: SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(self.boxHightD)/2) - (Float(self.boxHight)/2), destinationNode.position.z), duration: 0.5)
+                                    
+                                    self.boxPosition = SCNVector3(destinationNode.position.x, (destinationNode.position.y - Float(self.boxHightD)/2) - (Float(self.boxHight)/2), destinationNode.position.z)
+                                    
                                     self.updateAllCordinates()
                                     self.currentMovingNode.runAction(moveToTappedNode)
                                     print("bottom")
@@ -1560,41 +1619,51 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
    
     @IBAction func upAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-            currentMovingNode.position.y += 0.01
-           
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! + SCNVector3(0,0.01,0)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+            //currentMovingNode.position.y += 0.01
+
         }
        
     }
     @IBAction func rightAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-
-            currentMovingNode.position.x += 0.01
+            print("right")
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! + SCNVector3(0.01,0,0)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
         }
     }
     @IBAction func downAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-
-            currentMovingNode.position.y -= 0.01
-            
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! - SCNVector3(0,0.01,0)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
         }
     }
     @IBAction func leftAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-
-            currentMovingNode.position.x -= 0.01
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! - SCNVector3(0.01,0,0)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
         }
     }
     @IBAction func outAction(_ sender: Any) {
         if movingStatus == .currentMovingChosen{
-
-            currentMovingNode.position.z -= 0.01
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! - SCNVector3(0,0,0.01)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+            //currentMovingNode.position.z -= 0.01
          print("out")
         }
     }
     @IBAction func inAction(_ sender: Any) {
         if movingStatus ==  .currentMovingChosen{
-
-            currentMovingNode.position.z += 0.01
+            boxPosition = eachBoxSize[currentBoxNumber]!.5["position"]! + SCNVector3(0,0,0.01)
+            currentMovingNode.position = boxPosition
+            eachBoxSize[currentBoxNumber]!.5.updateValue(boxPosition, forKey: "position")
+            //currentMovingNode.position.z += 0.01
             print("in")
         }
     }
@@ -1611,6 +1680,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.createConfirmText()
         }) { (finished) in
         }
+        print("on confirmButton, position of currentnode is \(boxPosition)")
         
     }
     @IBAction func copyAction(_ sender: Any) {
@@ -1620,6 +1690,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
  
     
+    @IBAction func saveAction(_ sender: Any) {
+        
+        
+    }
     
     func createConfirmText(){
         let text = SKLabelNode(text: "DONE!")
@@ -1672,6 +1746,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     @IBOutlet var displayLbl: UILabel!
     @IBOutlet var confirm360: UIButton!
     @IBOutlet var camer360Img: UIImageView!
+    @IBOutlet var saveBtn: UIButton!
     
     @IBOutlet var scanBtn: UIButton!
     //pink panel and items
