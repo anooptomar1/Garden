@@ -14,6 +14,7 @@ import ReplayKit
 import QuartzCore
 import GameKit
 import GoogleMobileAds
+import Firebase
 
 //extension of UIImage
 extension UIImage {
@@ -46,7 +47,7 @@ extension UIView {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GADBannerViewDelegate, RPPreviewViewControllerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GADBannerViewDelegate, RPPreviewViewControllerDelegate, GADInterstitialDelegate {
 
     //AdMob Banner
     
@@ -172,18 +173,64 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         bannerView.delegate = self
         bannerView.rootViewController = self
         bannerView.load(request)
-        
         let view = bannerView
         let image = UIImage.imageWithView(view: view!)
-        
-      
-        //self.view.addSubview(bannerView)
+        self.view.addSubview(bannerView)
     }
+    //interstitial Ad
+    var interstitial: GADInterstitial!
+    var interstitialCount = 0
+    func loadInterstitialAd(){
+        interstitial = GADInterstitial(adUnitID: "ca-app-pub-1323381872235473/6056276465")
+        let request = GADRequest()
+        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
+        interstitial.load(request)
+    }
+    func createAd() -> GADInterstitial {
+        let interstitial = GADInterstitial(adUnitID: "ca-app-pub-1323381872235473/6056276465")
+        interstitial.load(GADRequest())
+        return interstitial
+    }
+    func showInterstitialAd(){
+        if interstitial.isReady{
+            interstitial.present(fromRootViewController: self)
+            interstitial = createAd()
+            print("ad should be displaying")
+        }else{
+            print("ad isnt ready")
+        }
+    }
+    //interstitial Ad 2********************
+    var interstitial2: GADInterstitial!
+    func loadInterstitialAd2(){
+        interstitial2 = GADInterstitial(adUnitID: "ca-app-pub-1323381872235473/4640388487")
+        let request = GADRequest()
+        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
+        interstitial2.load(request)
+    }
+    func createAd2() -> GADInterstitial {
+        let interstitial = GADInterstitial(adUnitID: "ca-app-pub-1323381872235473/4640388487")
+        interstitial.load(GADRequest())
+        return interstitial
+    }
+    func showInterstitialAd2(){
+        if interstitial2.isReady{
+            interstitial2.present(fromRootViewController: self)
+            interstitial2 = createAd()
+            print("ad should be displaying")
+        }else{
+            print("ad isnt ready")
+        }
+    }
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // admob
-        //showBannerAd()
+        showBannerAd()
+        loadInterstitialAd()
+        loadInterstitialAd2()
+        interstitialCount = 0
 //        let request = GADRequest()
 //        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
 //        adViewDidReceiveAd(view: bannerAR)
@@ -527,6 +574,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     var addingState = AddObject.addAble
     @objc func tapped(recognizer :UIGestureRecognizer) {
         
+        
             let sceneView = recognizer.view as! ARSCNView
             let touchLocation = recognizer.location(in: sceneView)
             let hitTestResult = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
@@ -534,6 +582,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                 guard let hitResult = hitTestResult.first else {
                     return
                 }
+                //Admob interstitial count
+                //+1 on interstitial count every 5th box has an interstitial ad
+                interstitialCount += 1
+                if interstitialCount == 7{
+                    showInterstitialAd()
+                    loadInterstitialAd2()
+                }
+                if interstitialCount == 14{
+                    showInterstitialAd2()
+                    loadInterstitialAd()
+                    interstitialCount = 0
+                }
+                //no text display while adding box or tapping screen
                 self.displayLbl.text = ""
                 //copy the chosen node
                 if movingStatus == .chooseToCopy{
@@ -717,49 +778,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         }
     }
     
-    
-    
-
-    
-
-    @IBAction func recordAction(_ sender: Any) {
-     let recorder = RPScreenRecorder.shared()
-        recorder.startRecording { (error) in
-            if error != nil{
-                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
-    }
-    
-    @IBAction func stopRecordAction(_ sender: Any) {
-       let recorder = RPScreenRecorder.shared()
-        recorder.stopRecording { (previewVC, error) in
-       
-                if let unwrappedPreview = previewVC {
-                    unwrappedPreview.previewControllerDelegate = self
-                    
-                    if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-                        self.present(unwrappedPreview, animated: true, completion: nil)
-                    }
-                    else {
-                        unwrappedPreview.popoverPresentationController?.barButtonItem = self.navigationItem.leftBarButtonItem!
-                        unwrappedPreview.modalPresentationStyle = .popover
-                        unwrappedPreview.modalPresentationStyle = UIModalPresentationStyle.popover
-                        unwrappedPreview.preferredContentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
-                        self.present(unwrappedPreview, animated: true, completion: nil)
-                        
-                    }
-                }
-//                self.present(
-//                    vc,
-//                    animated:  true,
-//                    completion: nil
-//                )
-            
-        }
-    }
     
 
     @IBAction func addObjects(_ sender: Any) {
@@ -1105,12 +1123,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         view.removeFromSuperview()
         view = nil
         parent?.addSubview(view) // This line causes the view to be reloaded
-
-//        loadView()
-       
-        //self.reloadViewFromNib()
-       
-       
     }
     var planeFix = false
     var nodeOverPlane = SCNNode()
@@ -1123,8 +1135,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             
                 if self.isOnScan == false{
                 self.blurBarImg.center.x = self.scanBtn.center.x
-
-       
                 self.isOnScan = true
                 }
             }) { (finished) in
@@ -1134,12 +1144,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         group.notify(queue: .main){
  
             if self.planeFix{
-                //self.blurBarImg.center.x = self.scanBtn.center.x
-                //            UIView.animate(withDuration: 0.1, animations: {
-                //                self.blurBarImg.center.x = self.scanBtn.center.x
-                //            }) { (finished) in
-                //            }
-                //change image of scanbutton to empty
+                
                 self.scanBtn.setImage(UIImage(named: "scanEmpty"), for: .normal)
                 let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
                 configuration.isLightEstimationEnabled = true
@@ -1157,19 +1162,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                 }
                 self.planeFix = false
             }else{
-                //            UIView.animate(withDuration: 0.1, animations: {
-                //                self.blurBarImg.center.x = self.scanBtn.center.x
-                //            }) { (finished) in
-                //            }
-                //change image of scanbutton to fill
+                
                 self.scanBtn.setImage(UIImage(named: "scanFill"), for: .normal)
                 self.nodeOverPlane.removeFromParentNode()
                 for plane in self.planes{
+                    
+                    
+                    
                     plane.planeGeometry.materials.forEach({ (material) in
+                        
+                        let request = GADRequest()
+                        request.testDevices = ["997a25edf07df666778ec70835e67aa7", kGADSimulatorID]
+                        var bannerView: GADBannerView!
+                        if UIDevice.current.userInterfaceIdiom == .pad{
+                            bannerView = GADBannerView(adSize: kGADAdSizeFullBanner)
+                            bannerView.center = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2 - self.view.frame.height / 2 + 45)
+                        }
+                        bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+                        bannerView.delegate = self
+                        bannerView.rootViewController = self
+                        bannerView.load(request)
+                        
+                        let view = bannerView
+                        let image = UIImage.imageWithView(view: view!)
+                        
+                        
+                        
+                        
                         var geometry = SCNGeometry()
                         geometry = plane.planeGeometry
                         let material = SCNMaterial()
-                        material.diffuse.contents = UIImage(named:"planeBlue")
+                        material.diffuse.contents = image as! UIImage
                         geometry.materials = [material]
                         self.nodeOverPlane = SCNNode(geometry: geometry)
                         self.nodeOverPlane.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2.0), 1.0, 0.0, 0.0);
