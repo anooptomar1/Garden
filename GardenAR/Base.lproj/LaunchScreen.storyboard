@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,13 +16,117 @@
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoBG" translatesAutoresizingMaskIntoConstraints="NO" id="3aR-Ks-SMD">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoArtBoxCube" translatesAutoresizingMaskIntoConstraints="NO" id="cYG-mP-vy6">
+                                <rect key="frame" x="-89.5" y="166.5" width="554" height="294"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="294" id="DMf-T3-YaU">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="478"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="554" id="WyL-5j-WiD">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="905"/>
+                                    </constraint>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ARTBOX" translatesAutoresizingMaskIntoConstraints="NO" id="hwK-cg-GS3">
+                                <rect key="frame" x="104" y="454.5" width="167" height="95"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="167" id="Mrg-hq-j3i">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="256"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="146" id="N4X-KJ-f7f"/>
+                                    <constraint firstAttribute="height" constant="95" id="SYA-ZA-Jtg">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="146"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="167" id="ZsL-Iv-OIJ"/>
+                                    <constraint firstAttribute="height" constant="95" id="duo-pJ-Rrh"/>
+                                    <constraint firstAttribute="width" constant="256" id="q6m-UF-0NQ"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="N4X-KJ-f7f"/>
+                                        <exclude reference="ZsL-Iv-OIJ"/>
+                                        <exclude reference="duo-pJ-Rrh"/>
+                                        <exclude reference="q6m-UF-0NQ"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="Mrg-hq-j3i"/>
+                                        <exclude reference="SYA-ZA-Jtg"/>
+                                        <include reference="ZsL-Iv-OIJ"/>
+                                        <include reference="duo-pJ-Rrh"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <mask key="constraints">
+                                        <exclude reference="Mrg-hq-j3i"/>
+                                        <include reference="N4X-KJ-f7f"/>
+                                        <exclude reference="SYA-ZA-Jtg"/>
+                                        <include reference="q6m-UF-0NQ"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="2gs-61-Fkm"/>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="JLF-pX-Y87"/>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="top" secondItem="cYG-mP-vy6" secondAttribute="bottom" constant="-6" id="OOL-Z1-9tq"/>
+                            <constraint firstItem="cYG-mP-vy6" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-20" id="Vrl-If-v9V">
+                                <variation key="heightClass=regular-widthClass=regular" constant="-51"/>
+                            </constraint>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="W4R-Dc-rRd"/>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="469" id="dae-ZI-lve">
+                                <variation key="heightClass=regular-widthClass=regular" constant="713"/>
+                            </constraint>
+                            <constraint firstItem="3aR-Ks-SMD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="lLS-6P-pnl"/>
+                            <constraint firstItem="hwK-cg-GS3" firstAttribute="top" secondItem="cYG-mP-vy6" secondAttribute="bottom" constant="-10" id="pNe-St-vau">
+                                <variation key="heightClass=regular-widthClass=regular" constant="8"/>
+                            </constraint>
+                            <constraint firstItem="3aR-Ks-SMD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="uMU-MH-sC6"/>
+                            <constraint firstItem="3aR-Ks-SMD" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="w3d-Zh-bDc"/>
+                            <constraint firstItem="cYG-mP-vy6" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="yAC-XY-19N"/>
+                            <constraint firstItem="3aR-Ks-SMD" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zUX-V3-TOJ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2gs-61-Fkm"/>
+                                <exclude reference="JLF-pX-Y87"/>
+                                <exclude reference="OOL-Z1-9tq"/>
+                                <exclude reference="pNe-St-vau"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="JLF-pX-Y87"/>
+                                <include reference="OOL-Z1-9tq"/>
+                                <exclude reference="W4R-Dc-rRd"/>
+                                <exclude reference="dae-ZI-lve"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <include reference="2gs-61-Fkm"/>
+                                <exclude reference="W4R-Dc-rRd"/>
+                                <exclude reference="dae-ZI-lve"/>
+                                <include reference="pNe-St-vau"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="50.359712230215834" y="373.92086330935251"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ARTBOX" width="257" height="44"/>
+        <image name="logoArtBoxCube" width="510" height="533"/>
+        <image name="logoBG" width="750" height="1334"/>
+    </resources>
 </document>
