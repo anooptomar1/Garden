@@ -35,6 +35,7 @@
 		93455D601F2F476C00066876 /* spherical.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5E1F2F476C00066876 /* spherical.jpg */; };
 		93455D611F2F476C00066876 /* sphericalBlurred.png in Resources */ = {isa = PBXBuildFile; fileRef = 93455D5F1F2F476C00066876 /* sphericalBlurred.png */; };
 		93595AED1F376E2A00004982 /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */; };
+		937D2B9E1F71512E006D208C /* extraCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937D2B9D1F71512E006D208C /* extraCode.swift */; };
 		9381A0011F37636800CFC14B /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93819FFF1F37636800CFC14B /* GoogleMobileAds.framework */; };
 		9381A0021F37636800CFC14B /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9381A0001F37636800CFC14B /* README.txt */; };
 		9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381F9AE1F263299007063D4 /* OverlayPlane.swift */; };
@@ -79,6 +80,7 @@
 		934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCoreDiagnostics.framework; path = Pods/FirebaseCore/Frameworks/FirebaseCoreDiagnostics.framework; sourceTree = "<group>"; };
 		934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseNanoPB.framework; path = Pods/FirebaseCore/Frameworks/FirebaseNanoPB.framework; sourceTree = "<group>"; };
 		93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseInstanceID.framework; path = Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		937D2B9D1F71512E006D208C /* extraCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extraCode.swift; sourceTree = "<group>"; };
 		93819FFF1F37636800CFC14B /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		9381A0001F37636800CFC14B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		9381F9AE1F263299007063D4 /* OverlayPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPlane.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				93819FFE1F37636800CFC14B /* GoogleMobileAdsSdkiOS-7.21.0 4 */,
 				9331481F1F2512FE00CA7085 /* art.scnassets */,
 				933148211F2512FE00CA7085 /* ViewController.swift */,
+				937D2B9D1F71512E006D208C /* extraCode.swift */,
 				9381F9B61F267BAD007063D4 /* Utilities.swift */,
 				9381F9AE1F263299007063D4 /* OverlayPlane.swift */,
 				93455D5D1F2F476C00066876 /* Environment */,
@@ -395,6 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				937D2B9E1F71512E006D208C /* extraCode.swift in Sources */,
 				933148221F2512FE00CA7085 /* ViewController.swift in Sources */,
 				9381F9AF1F263299007063D4 /* OverlayPlane.swift in Sources */,
 				9381F9B71F267BAD007063D4 /* Utilities.swift in Sources */,

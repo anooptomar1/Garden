@@ -283,7 +283,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         registeredPanGestureRecognizer()
         
         blurrEfect(bg: middleBig)
-        blurrEfect(bg: middleSmall)
+       // blurrEfect(bg: middleSmall)
         blurrEfect(bg: plusImg)
         blurrEfect(bg: minusImg)
         blurrEfect(bg: trashImg)
@@ -705,15 +705,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
   
 
-
+//Delete
     @IBOutlet var cancelBtn: UIButton!
-    @IBAction func cancelSceneAction(_ sender: Any) {
-        
+    func presentAlert(alert: String){
+        let alertVC = UIAlertController(title: "New Scene", message: alert, preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "Delete", style: .default) { (action) in
+            alertVC.dismiss(animated: true, completion: nil)
+            self.renewAction()
+        }
+        let noAction = UIAlertAction(title: "Back", style: .default) { (renewAction) in
+            alertVC.dismiss(animated: true, completion: self.renewAction)
+        }
+        alertVC.addAction(okayAction)
+        alertVC.addAction(noAction)
+        present(alertVC, animated: true, completion: nil)
+    }
+    func renewAction(){
+        print("new")
         let group = DispatchGroup()
         group.enter()
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.1, animations: {
-                self.blurBarImg.center.x = self.cancelBtn.center.x
+                //self.blurBarImg.center.x = self.cancelBtn.center.x
                 self.isOnScan = false
             }) { (finished) in
             }
@@ -723,13 +736,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.reloadViewFromNib()
             
         }
- 
     }
+    @IBAction func cancelSceneAction(_ sender: Any) {
+        presentAlert(alert: "Are you sure to delete your scene?")
+    }
+    //Delete
     
     @IBAction func takeScreenshot(_ sender: Any) {
         //the camera button, changing to alpha 1
         UIView.animate(withDuration: 0.1, animations: {
-            self.blurBarImg.center.x = self.camBtn.center.x
+            //self.blurBarImg.center.x = self.camBtn.center.x
             self.isOnScan = false
         }) { (finished) in
         }
@@ -744,8 +760,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.camBtn.alpha = 0.0
             self.cancelBtn.alpha = 0.0
             self.scanBtn.alpha = 0.0
-            self.pinkPanel.alpha = 0.0
-            self.blurBarImg.alpha = 0.0
+            //self.pinkPanel.alpha = 0.0
+           // self.blurBarImg.alpha = 0.0
         }) { (finished) in
         }
     }
@@ -805,8 +821,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.camBtn.alpha = 1
             self.cancelBtn.alpha = 1
             self.scanBtn.alpha = 1
-            self.pinkPanel.alpha = 1
-            self.blurBarImg.alpha = 1
+            //self.pinkPanel.alpha = 1
+           // self.blurBarImg.alpha = 1
         }) { (finished) in
         }
     }
@@ -1091,8 +1107,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             self.rightBtn.alpha = toAlpha
             self.in1Btn.alpha = toAlpha
             self.out1Btn.alpha = toAlpha
-            self.middleRound.alpha = toAlpha
-            self.middleSmall.alpha = toAlpha
+            //self.middleRound.alpha = toAlpha
+            //self.middleSmall.alpha = toAlpha
             self.middleBig.alpha = toAlpha
             //scales
             self.minusBtn.alpha = toAlpha
@@ -1105,13 +1121,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             //trash
             self.trashBtn.alpha = toAlpha
             self.trashImg.alpha = toAlpha
+            
         }) { (finished) in
         }
     }
     
     
     @IBAction func confirm360Action(_ sender: Any) {
-        let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
+        let configuration = self.sceneView.session.configuration as! ARWorldTrackingConfiguration
         configuration.isLightEstimationEnabled = true
         configuration.planeDetection = []
         self.sceneView.session.run(configuration, options: [])
@@ -1129,16 +1146,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
         UIView.animate(withDuration: 0.3, animations: {
             self.camBtn.alpha = 1
             self.camBtn.layer.zPosition = 2
-            self.blurBarImg.alpha = 1
-            self.blurBarImg.layer.zPosition = 2
+            //self.blurBarImg.alpha = 1
+            //self.blurBarImg.layer.zPosition = 2
             self.scanBtn.alpha = 1
             self.scanBtn.layer.zPosition = 2
             self.cancelBtn.alpha = 1
             self.cancelBtn.layer.zPosition = 2
-            self.blurBarImg.alpha = 1
-            self.blurBarImg.layer.zPosition = 2
-            self.pinkPanel.alpha = 1
-            self.pinkPanel.layer.zPosition = 0
+            //self.blurBarImg.alpha = 1
+            //self.blurBarImg.layer.zPosition = 2
+            //self.pinkPanel.alpha = 1
+            //self.pinkPanel.layer.zPosition = 0
             self.confirm360.alpha = 0
             self.camer360Img.alpha = 0
             self.displayLbl.text = ""
@@ -1173,7 +1190,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
             UIView.animate(withDuration: 0.1, animations: {
             
                 if self.isOnScan == false{
-                self.blurBarImg.center.x = self.scanBtn.center.x
+                //self.blurBarImg.center.x = self.scanBtn.center.x
                 self.isOnScan = true
                 }
             }) { (finished) in
@@ -1184,8 +1201,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
  
             if self.planeFix{
                 
-                self.scanBtn.setImage(UIImage(named: "scanEmpty"), for: .normal)
-                let configuration = self.sceneView.session.configuration as! ARWorldTrackingSessionConfiguration
+                self.scanBtn.setImage(UIImage(named: "transFloor"), for: .normal)
+                let configuration = self.sceneView.session.configuration as! ARWorldTrackingConfiguration
                 configuration.isLightEstimationEnabled = true
                 configuration.planeDetection = []
                 self.sceneView.session.run(configuration, options: [])
@@ -1202,7 +1219,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
                 self.planeFix = false
             }else{
                 
-                self.scanBtn.setImage(UIImage(named: "scanFill"), for: .normal)
+                self.scanBtn.setImage(UIImage(named: "TFloor"), for: .normal)
                 self.nodeOverPlane.removeFromParentNode()
                 for plane in self.planes{
                     
@@ -1555,7 +1572,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // Create a session configuration
-        let configuration = ARWorldTrackingSessionConfiguration()
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.worldAlignment = .gravity
         configuration.planeDetection = .horizontal
         // Run the view's session
         sceneView.session.run(configuration)
@@ -1690,10 +1708,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     }
  
     
-    @IBAction func saveAction(_ sender: Any) {
-        
-        
-    }
     
     func createConfirmText(){
         let text = SKLabelNode(text: "DONE!")
@@ -1734,7 +1748,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     @IBOutlet var out1Btn: UIButton!
     @IBOutlet var confirmOn: UIButton!
   
-    @IBOutlet var middleRound: UIImageView!
+
     @IBOutlet var copyBtn: UIButton!
     @IBOutlet var middleSmall: UIImageView!
     @IBOutlet var middleBig: UIImageView!
@@ -1746,7 +1760,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     @IBOutlet var displayLbl: UILabel!
     @IBOutlet var confirm360: UIButton!
     @IBOutlet var camer360Img: UIImageView!
-    @IBOutlet var saveBtn: UIButton!
+
     
     @IBOutlet var scanBtn: UIButton!
     //pink panel and items
@@ -1766,11 +1780,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSKViewDelegate, GAD
     func blurrEfectForPanel(){
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
         let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.frame = pinkPanel.bounds
+        //blurView.frame = pinkPanel.bounds
         //blurView.layer.borderWidth = 1
         //blurView.layer.cornerRadius = bg.frame.height / 2
         //blurView.clipsToBounds = true
-        pinkPanel.addSubview(blurView)
+        //pinkPanel.addSubview(blurView)
     }
 
   
