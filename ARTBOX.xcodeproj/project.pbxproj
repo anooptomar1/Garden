@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9328B43F1F376B74005396E3 /* FirebaseCoreDiagnostics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */; };
 		9328B4401F376B74005396E3 /* FirebaseNanoPB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */; };
-		9328B4441F376BA2005396E3 /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */; };
 		9331481E1F2512FE00CA7085 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9331481D1F2512FE00CA7085 /* AppDelegate.swift */; };
 		933148201F2512FE00CA7085 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 9331481F1F2512FE00CA7085 /* art.scnassets */; };
 		933148221F2512FE00CA7085 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933148211F2512FE00CA7085 /* ViewController.swift */; };
@@ -51,8 +50,6 @@
 		1C6EBDAFDD26FB1898BFD295 /* Pods-ARTBOX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARTBOX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARTBOX/Pods-ARTBOX.debug.xcconfig"; sourceTree = "<group>"; };
 		2C0A6A8968BD7DD0EDD5C80D /* Pods_ARTBOX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARTBOX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9328B4411F376B74005396E3 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Pods/FirebaseCore/Frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
-		9328B4421F376B9C005396E3 /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = nanopb.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/GardenAR-ccvtevnhihupnufovldorvlnhhqd/Build/Products/Debug-iphoneos/nanopb/nanopb.framework"; sourceTree = "<group>"; };
-		9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleToolboxForMac.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/GardenAR-ccvtevnhihupnufovldorvlnhhqd/Build/Products/Debug-iphoneos/GoogleToolboxForMac/GoogleToolboxForMac.framework"; sourceTree = "<group>"; };
 		9331481A1F2512FE00CA7085 /* ARTBOX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARTBOX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9331481D1F2512FE00CA7085 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9331481F1F2512FE00CA7085 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -88,6 +85,7 @@
 		9381F9AE1F263299007063D4 /* OverlayPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPlane.swift; sourceTree = "<group>"; };
 		9381F9B01F2633E7007063D4 /* overlay_grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = overlay_grid.png; path = "../../../../../../Downloads/Hello-AR/Hello-AR/overlay_grid.png"; sourceTree = "<group>"; };
 		9381F9B61F267BAD007063D4 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		93C582861F740A1F003A8279 /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = SOURCE_ROOT; };
 		93C5CFE11F37756000B8F27D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		93CA370C1F376CF6008F8F1D /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		A52DBF56ED09F144E227050F /* Pods-ARTBOX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARTBOX.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARTBOX/Pods-ARTBOX.release.xcconfig"; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 				93CA370E1F376DCB008F8F1D /* FirebaseCore.framework in Frameworks */,
 				9328B43F1F376B74005396E3 /* FirebaseCoreDiagnostics.framework in Frameworks */,
 				9328B4401F376B74005396E3 /* FirebaseNanoPB.framework in Frameworks */,
-				9328B4441F376BA2005396E3 /* GoogleToolboxForMac.framework in Frameworks */,
 				F4287C3CD7D08726F4018875 /* Pods_ARTBOX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,8 +114,6 @@
 			children = (
 				93595AEC1F376E2A00004982 /* FirebaseInstanceID.framework */,
 				93CA370C1F376CF6008F8F1D /* FirebaseAnalytics.framework */,
-				9328B4431F376B9E005396E3 /* GoogleToolboxForMac.framework */,
-				9328B4421F376B9C005396E3 /* nanopb.framework */,
 				9328B4411F376B74005396E3 /* FirebaseCore.framework */,
 				934F5C851F376AED0018BE33 /* FirebaseCoreDiagnostics.framework */,
 				934F5C861F376AEE0018BE33 /* FirebaseNanoPB.framework */,
@@ -164,6 +159,7 @@
 				933148281F2512FE00CA7085 /* LaunchScreen.storyboard */,
 				9331482B1F2512FE00CA7085 /* Info.plist */,
 				93C5CFE11F37756000B8F27D /* GoogleService-Info.plist */,
+				93C582861F740A1F003A8279 /* GoogleToolboxForMac.framework */,
 			);
 			path = ARTBOX;
 			sourceTree = "<group>";
@@ -439,6 +435,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -467,6 +464,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -485,10 +483,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "$(inherited)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -496,6 +496,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -524,6 +525,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -536,10 +538,11 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
@@ -557,7 +560,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/ARTBOX/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.GardenAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.ARTBOX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -578,7 +581,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/ARTBOX/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.GardenAR;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jennifervilandahasler.ARTBOX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
